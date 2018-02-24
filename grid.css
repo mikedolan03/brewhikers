@@ -34,7 +34,9 @@ div [class*="col-"]{
 	width: 100%;
 }
 
-
+.col-3 {
+	width: 100%;
+}
 /* non mobile grid */
 @media only screen and (min-width: 640px) {
 
