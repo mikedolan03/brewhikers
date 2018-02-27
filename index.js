@@ -8,6 +8,7 @@ let hikeData = {};
 let breweryData = {};
 let map;
 let userLoc;
+const breweryDetails = [];
 const userHikes = []; 
 const userBreweries = []; 
 let brewerylistContent = "";
@@ -184,12 +185,20 @@ let brewerylistContent = "";
 
 		console.log(status, place);
 
+		breweryDetails.push( {
+			name: place.name,
+			id: place.place_id,
+			latlong: place.geometry.location
+		});
+
+		let breweryIndex = breweryDetails.length - 1;
+
 		newbrewerylistContent += `<li>
 						<img src="http://badgerheadgames.com/wp-content/uploads/2018/02/beer-2370783_1920-e1519612752761-1.jpg" alt="${place.name}">
 						<p class="brewery-name">${place.name}</p>
 						<p class="brewery-address">${place.vicinity}</p>
 						<p class="brewery-rating">${place.rating}</p>
-						<button name="brewery" id="brewery${place.place_id}" data="${place.place_id}" class="js-add-brewery-button"> Add to list</button>`;
+						<button name="brewery" id="brewery${place.place_id}" data="${breweryIndex}" class="js-add-brewery-button"> Add to list</button>`;
 
 		if(place.reviews){
 			newbrewerylistContent += `<p class="brewery-review">Recent Review: ${place.reviews[0].text}</p>`;
@@ -198,6 +207,9 @@ let brewerylistContent = "";
 		newbrewerylistContent += `</li>`;
 
 		$(`#${place.place_id}`).html(newbrewerylistContent);
+
+
+		
 
 		/*$(".js-add-brewery-button").click( event => {
 			event.preventDefault();
@@ -226,17 +238,39 @@ let brewerylistContent = "";
         let myLatLng = {lat: userLat, lng: userLong};
 
         // Create a map object and specify the DOM element for display.
-        let bhmap = new google.maps.Map(document.getElementById('final-map'), {
+       // let bhmap
+        map = new google.maps.Map(document.getElementById('final-map'), {
           center: myLatLng,
-          zoom: 4
+          zoom: 10
         });
+
+        console.log("brewery array", breweryDetails[userBreweries[0]]);
 
         // Create a marker and set its position.
         let marker = new google.maps.Marker({
-          map: bhmap,
+          map: map,
           position: myLatLng,
           title: 'Hello World!'
         });
+
+        /*let marker2 = new google.maps.Marker({
+          map: map,
+          position: breweryDetails[userBreweries[0]].latlong,
+          title: breweryDetails[userBreweries[0]].name
+        });*/
+
+        let markers = [];
+
+        for (let i = 0; i < userBreweries.length; i++)
+        {
+        	marker[i] = new google.maps.Marker({
+	          map: map,
+	          position: breweryDetails[userBreweries[i]].latlong,
+	          title: breweryDetails[userBreweries[i]].name
+	        });
+
+        }
+
       }
 
 
@@ -257,7 +291,7 @@ function getDataFromApi(searchTerm, latitude, longitude, maxDistance, callback) 
 
 	$.getJSON(HIKE_SEARCH_URL, query, callback);
 }
-
+/*
 function getDataFromBreweryApi(city, callback) {
 
 	let BREWERY_SEARCH_URL = '';
@@ -265,13 +299,13 @@ function getDataFromBreweryApi(city, callback) {
 
 	$.getJSON(BREWERY_SEARCH_URL, '', callback);
 }
-
+*/
 function getDataFromBreweryGoogleApi(radius, callback) {
 
 	
  userLoc = new google.maps.LatLng(userLat,userLong);
 
- map = new google.maps.Map(document.getElementById('map'), {
+ map = new google.maps.Map(document.getElementById('final-map'), {
       center: userLoc,
       zoom: 15
     });
