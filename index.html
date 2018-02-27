@@ -23,12 +23,15 @@
 								<h1>Plan your hiking and beer tasting road trip today.</h1>
 								<div class="form-styles">
 								<form>
-									<select name="locations" class="select-location">
-									 	<option value="Great Falls">Great Falls</option>
-									 	<option value="Charlottesville">Charlottesville</option>
-									 	<option value="Harrisonburg">Harrisonburg</option>
-									 	<option value="Roanoke">Roanoke</option>
-									</select> <button class="choose-loc-button js-pick-location-button">Go!</button>
+									<fieldset>
+    									<legend>Choose a starting location:</legend>
+										<select name="locations" class="select-location">
+										 	<option value="Great Falls">Great Falls</option>
+										 	<option value="Charlottesville">Charlottesville</option>
+										 	<option value="Harrisonburg">Harrisonburg</option>
+										 	<option value="Roanoke">Roanoke</option>
+										</select> <button class="choose-loc-button js-pick-location-button">Go!</button>
+									</fieldset>
 
 								</form>
 							</div>
@@ -75,42 +78,53 @@
 						</div>
 					</div>
 				</section>
-		</section>
-		<section class="js-hike-view hide">
-			<header role = "banner" class="top-banner-small">
-			</header>
-			<section>
-				<div class="row">
-					<div class="col-12">
-						<h1>Choose a hike</h1>
-						<ul id="js-hike-list">
-							<li><img src="https://cdn-files.apstatic.com/hike/7041455_small_1512517042.jpg" alt="Jeremys Run Loop"> 
-								<p class="hike-name">Neighbor Mountain - Jeremys Run Loop</p><button class="small-right">Select</button>
-								<p class="hike-summary">A moderately strenuous loop above and through the canyon of Jeremys Run.</p>
-								<p class="hike-info">Distance: 8.8 miles  Difficulty: Moderate  Rating: 5/5</p>
-								</li>
-							<li><p class="hike-name">Neighbor Mountain - Jeremys Run Loop</p>
-							<p class="hike-summary">A moderately strenuous loop above and through the canyon of Jeremys Run.</p>
-							<button>Select</button></li>
-						</ul>
-					</div>
-				</div>
 			</section>
-		</section>
-		<section id='js-pick-brew-section' class='js-brewery-view hide'>
-			<header role = "banner" class="top-banner-small">
-			</header>
-			<section>
-				<div class="row">
-					<div class="col-12">
-						<h1>Pick some breweries to tour:</h1>
-						<ul id="js-brewery-list">
-							<img src="http://badgerheadgames.com/wp-content/uploads/2018/02/beer-2370783_1920-e1519612752761-1.jpg" alt="Loading Breweries"> 
-							<p class="brewery-name">Finding some breweries near your hike</p>
-							<p class="brewery-summary">Just a few seconds...</p>
-						</ul>
+			<section class="js-hike-view hide">
+				<header role = "banner" class="top-banner-small">
+				</header>
+				<section>
+					<div class="row">
+						<div class="col-12">
+							<h1>Step 1: Find a hike!</h1>
+							<p class="js-hike-search-results"></p>
+							<form>
+								<fieldset>
+    								<legend>Pick a hike:</legend>
+							<ul id="js-hike-list">
+								<li><img src="https://cdn-files.apstatic.com/hike/7041455_small_1512517042.jpg" alt="Jeremys Run Loop"> 
+									<p class="hike-name">Neighbor Mountain - Jeremys Run Loop</p><button class="small-right">Select</button>
+									<p class="hike-summary">A moderately strenuous loop above and through the canyon of Jeremys Run.</p>
+									<p class="hike-info">Distance: 8.8 miles  Difficulty: Moderate  Rating: 5/5</p>
+									</li>
+								<li><p class="hike-name">Neighbor Mountain - Jeremys Run Loop</p>
+								<p class="hike-summary">A moderately strenuous loop above and through the canyon of Jeremys Run.</p>
+								<button>Select</button></li>
+							</ul>
+						</fieldset>
+					</form>
+						</div>
 					</div>
-				</div>
+				</section>
+			</section>
+			<section id='js-pick-brew-section' class='js-brewery-view hide'>
+				<header role = "banner" class="top-banner-small banner-fixed">
+					<button class="banner-button greyed" id="js-breweries-selected-go-button">Go!</button>
+				</header>
+				<section>
+					<div class="row">
+						<div class="col-12">
+							<h1 class="breweries-h1">Step 2: Find some breweries to tour!</h1>
+							<p class="js-breweries-search-results"></p>
+							<form>
+								<fieldset>
+    								<legend>Pick 1 or more breweries:</legend>
+							<ul id="js-brewery-list">
+								<img src="http://badgerheadgames.com/wp-content/uploads/2018/02/beer-2370783_1920-e1519612752761-1.jpg" alt="Loading Breweries"> 
+								<p class="brewery-name">Finding some breweries near your hike</p>
+								<p class="brewery-summary">Just a few seconds...</p>
+							</ul>
+						</div>
+					</div>
 			</section>
 		</section>
 		<section class="hide">
@@ -171,16 +185,16 @@
 			</div>
 		</section>
 		<section id="show-map" class='hide'>
-		<header role = "banner">
-			<div class="row">
-				<div class="col-12">
-					<h1>Brew Hikers</h1>
-					<h3>Don't hike through, hike to the brew!</h3>
-					<p>Put on your boots, you are all set! Here is a map of your trip...</p>
+			<header role = "banner" class="top-banner-small"></header>
+			<section>
+				<div class="row">
+					<div class="col-12">
+						<div id="final-map"></div>
+					</div>
 				</div>
-			</div>
-		</header>
-			<div class="row">
+			</section>
+
+			<div class="row hide">
 				<div class="col-12">
 					<div class="map-view">
 						<iframe src="https://www.google.com/maps/d/embed?mid=1OHnCSWLB0DFTCQah0Y8qPEBIdkXycm3j" width="100%" height="280"></iframe>
@@ -195,8 +209,9 @@
 
 
 		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQYbpeVxvc5FeK2hbOUjCOv9J8coUz180&libraries=places"></script>
+
 		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     	<script src="apicalls.js"></script>
     	<script src="index.js"></script>
-	</body>
+    </body>
 </html>
