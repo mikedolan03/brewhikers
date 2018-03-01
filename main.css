@@ -22,11 +22,17 @@ header {
   margin-left: auto;
   }
 
-img {
-  width: 100%;
-  min-height: 186px;
+.img-hikes {
+  width: auto;
+  /*in-height: 186px; */
+  margin-right: 10px; 
   /*width: 100px;
   height: 100px; */
+}
+
+.featured-hike {
+  height: 200px;
+  width: 100%;
 }
 
 ul {
@@ -113,12 +119,26 @@ button {
   height: 400px;
 }
 
+.brewery-box-container {
+display: table;
+}
+
+.brewery-pic-container {
+display: table-cell;
+width: 20%;
+margin: 0;
+}
+
+.brewery-info-container {
+display: table-cell;
+width: 66%;
+margin: 0;
+}
+
+
+
 li img {
-    /* float: left; */
-    width: 100%;
-    min-height: auto;
-    display: block;
-    margin: 5px;
+   float: left;
 }
 
 .top-banner {
@@ -126,7 +146,7 @@ li img {
   background:url(https://images.unsplash.com/photo-1478555718543-a87aa261dbc4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=7ba996efd64c3b1cccb970108eb5b24b) center center  no-repeat;
   background-size: cover;
   width:100%;
-  height:300px;
+  height:500px;
   padding: 0px;
 }
 
@@ -134,7 +154,7 @@ li img {
   background-color:#0000004f;
   background-size: cover;
   width:100%;
-  height:300px;
+  height:500px;
 }
 
 .top-banner-small {
@@ -203,6 +223,7 @@ header h1 {
 
 .legend-hikes {
   font-size: 2em;
+  font-weight:  600;
  text-shadow: 0px 0px black;
 }
 
@@ -234,7 +255,7 @@ fieldset {
   margin-bottom: 5px;
   color: #7e8925;
   padding: 0;
-  vertical-align:   middle;
+  vertical-align:  middle;
 }
 
 input[type=checkbox] {
@@ -250,6 +271,52 @@ input[type=checkbox]:checked ~ label{
 {
   display: none; 
 }
+
+.progress-row {
+  border-width:   1px;
+  border-radius:  10px;
+  border-style:   solid;
+
+}
+
+.progress-box {
+  position:   relative; 
+  font-size:  .8em;
+ /* border-style: solid;
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  border-left-width: 0px;
+  border-right-width: 0px;  */
+  min-height: 70px;
+  padding: 10px;
+}
+
+.progress-box p {
+  margin:   0; 
+  padding-bottom: 20px;
+
+}
+.progress-box-left { }
+ /* border-left-width: 1px;
+  border-right-width:   0px; 
+  border-bottom-left-radius: 10px;
+  border-top-left-radius: 10px;
+}
+
+.progress-box-right {
+  border-right-width: 1px;
+  border-left-width:  0px;
+  border-bottom-right-radius: 10px;
+  border-top-right-radius: 10px;
+}
+*/
+.progress-button {
+position:   absolute; 
+bottom:   1px; 
+width: 50%;
+
+}
+
 /* Custom dropdown */
 .custom-dropdown {
   width: 80%; 
@@ -306,6 +373,31 @@ input[type=checkbox]:checked ~ label{
     padding: 15px 0px 0px 8px;
     border-left: 1px solid #0ebeff;
 }
+
+/* The Modal (background) */
+.modal {
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  text-align: center;
+    background-color: white;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 20px;
+    width: 300px;
+    height: 300px;
+ }
  /* 
 .custom-dropdown::after { Custom dropdown arrow 
   content: "\25BC";
@@ -344,17 +436,19 @@ input[type=checkbox]:checked ~ label{
   height: 800px;
 }
 
+.img-hikes {
+  max-width: 250px;
+  height: auto;
+}
+
+
   li img {
-    float: left;
-    width: 200px;
-    min-height: 200px;
-    height: 200px;
-    display:  block;
-    margin: 5px 15px 5px 0px;
+  float: left;
+  margin-bottom: 10px;
 
   }
 
-  header h1 {
+ header h1 {
     margin: 0;
     padding: 0;
     font-weight: 700;
@@ -417,15 +511,7 @@ input[type=checkbox]:checked ~ label{
   vertical-align:   middle;
 }
 
-li img {
-  float: left;
-  width: 100px;
-  min-height: 100px;
-  height: 100px;
-  display:  block;
-  margin:   5px;
 
-}
 
 
 }
