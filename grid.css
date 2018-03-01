@@ -4,6 +4,7 @@
 
 
 .row {
+	width: 100%;
 	max-width: 1000px;
 	padding-left: 20px;
 	padding-right: 20px;
@@ -35,6 +36,10 @@ div [class*="col-"]{
 }
 
 .col-3 {
+	width: 100%;
+}
+
+.col-4 {
 	width: 100%;
 }
 /* non mobile grid */

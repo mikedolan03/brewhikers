@@ -12,11 +12,11 @@
   	FontAwesomeConfig = { searchPseudoElements: true };
 	</script>
 	<script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
-
 </head>
 	<body>
 		<div id="map"></div>
 		<main role="main">
+			<div class="center">
 			<section class="js-location-view">
 				<header role = "banner" class="top-banner">
 					<div class="top-banner-grey">
@@ -72,7 +72,7 @@
 							</div>	
 							<div class="col-3">
 								<button class="js-pick-hike featured-hike">
-									<img class="img-hikes" src="https://cdn-files.apstatic.com/hike/7013554_small_1457878625.jpg" alt="Hawksbill Mountain Loop"> 
+									<img class="img-hikes featured-hike" src="https://cdn-files.apstatic.com/hike/7013554_small_1457878625.jpg" alt="Hawksbill Mountain Loop"> 
 									<p class="hike-name">Neighbor Mountain - Jeremys Run Loop</p>
 									<p class="hike-summary">A moderately strenuous loop above and through the canyon of Jeremys Run.</p>
 								</button>
@@ -82,8 +82,6 @@
 				</section>
 			</section>
 			<section class="js-hike-view hide" aria-live="assertive">
-				<header role = "banner" class="top-banner-small">
-				</header>
 				<section>
 					<div class="js-progress-section progress-row row">
 						<div class="col-4 progress-box progress-box-left"><p class="js-step1-txt">Step 1: Exploring Charlottesville Area</p>
@@ -115,85 +113,28 @@
 				</section>
 			</section>
 			<section id='js-pick-brew-section' class='js-brewery-view hide' aria-live="assertive">
-				<section>
-					<div class="js-progress-section progress-row row">
+				<div class="js-progress-section progress-row row">
 					</div>
 					<div class="row">
 						<div class="col-12">
 							<form>
 								<fieldset>
     								<legend class="js-pick-breweries legend-hikes">Pick 1 or more breweries:</legend>
-							<ul id="js-brewery-list" >
-								<img src="http://badgerheadgames.com/wp-content/uploads/2018/02/beer-2370783_1920-e1519612752761-1.jpg" alt="Loading Breweries"> 
-								<p class="brewery-name">Finding some breweries near your hike</p>
-								<p class="brewery-summary">Just a few seconds...</p>
-							</ul>
+										<ul id="js-brewery-list" >
+											<img src="http://badgerheadgames.com/wp-content/uploads/2018/02/beer-2370783_1920-e1519612752761-1.jpg" alt="Loading Breweries"> 
+											<p class="brewery-name">Finding some breweries near your hike</p>
+											<p class="brewery-summary">Just a few seconds...</p>
+										</ul>
+								</fieldset>
+							</form>
 						</div>
 					</div>
 			</section>
-		</section>
-		<section class="hide">
-			<header role = "banner">
-				<div class="row">
-					<div class="col-12">
-							<h1>Brew Hikers</h1>
-							<h3>Don't hike through, hike to the brew!</h3>
-							<p>Choose a few breweries to visit after your hike...</p>
-					</div>
-				</div>
-			</header>
-			<div class="row">
-				<div class="col-12">
-					<div class="col-3">
-						<h2>Hike Selected:</h2> 
-					</div>
-					<div class="col-3">
-						<img src="https://cdn-files.apstatic.com/hike/7041455_small_1512517042.jpg" alt="Jeremys Run Loop"> 
-					</div>	
-					<div class="col-6">
-						<p class="hike-name">Neighbor Mountain - Jeremys Run Loop</p>
-						<p class="hike-summary">A moderately strenuous loop above and through the canyon of Jeremys Run.</p>
-					</div>
-				</div>
-			</div>
-			<div class="choose-brewery-view">
-				<div class="row">
-					<div class="col-6">
-						<input type="checkbox" id="brewery-1"><label for="brewery-1"><img src="http://lorempixel.com/output/nightlife-q-c-300-200-7.jpg" alt="South Street Brewery"> 
-						South Street Brewery</label>
-						
-					</div>
-					<div class="col-6">
-						<button>
-							<img src="http://badgerheadgames.com/wp-content/uploads/2018/02/beer-2370783_1920-e1519612752761-1.jpg" alt="Champion Brewing Co"> 
-							<p class="brewery-name">Champion Brewing Co</p>
-							<p class="brewery-summary">Brewery</p>
-						</button>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-6">
-						<button>
-							<img src="http://lorempixel.com/output/nightlife-q-c-300-200-7.jpg" alt="South Street Brewery"> 
-							<p class="brewery-name">South Street Brewery</p>
-							<p class="brewery-summary">Brewpub</p>
-						</button>
-					</div>
-					<div class="col-6">
-						<button>
-							<img src="http://lorempixel.com/output/nightlife-q-c-300-200-7.jpg" alt="Champion Brewing Co"> 
-							<p class="brewery-name">Champion Brewing Co</p>
-							<p class="brewery-summary">Brewery</p>
-						</button>
-					</div>
-				</div>	
-			</div>
-		</section>
 		<section id="show-map" class='hide' aria-live="assertive">
-			<header role = "banner" class="top-banner-small"></header>
 			<section>
 				<div class="row">
 				<div class="col-6 map-container ">
+					<h2>Here's your trip map!</h2>
 						<div id="final-map" ></div>
 					</div>
 				</div>
@@ -207,13 +148,6 @@
 
 			</section>
 
-			<div class="row hide">
-				<div class="col-12">
-					<div class="map-view">
-						<iframe src="https://www.google.com/maps/d/embed?mid=1OHnCSWLB0DFTCQah0Y8qPEBIdkXycm3j" width="100%" height="280"></iframe>
-					</div>
-				</div>
-			</div>
 		</section>
 		<section>
 			<div class = "modal hide">
@@ -236,6 +170,7 @@
 				</div>
 			</div>
 		</section>
+	</div>
 		</main>
 	<!---Script needed to set up Google Maps/Places API-->	
 	
