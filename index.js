@@ -184,7 +184,7 @@ if (!browserSupportsCSSProperty('animation')) {
 				console.log(i , breweryCount);
 
 				brewerylistContent += `<li id='${data[i].place_id}'>
-										<img class="img-hikes" src="http://badgerheadgames.com/wp-content/uploads/2018/02/beer-2370783_1920-e1519612752761-1.jpg" alt="${data[i].name}">
+										<img class="img-brew" src="http://badgerheadgames.com/wp-content/uploads/2018/02/beer-2370783_1920-e1519612752761-1.jpg" alt="${data[i].name}">
 										<p class="brewery-name">${data[i].name}</p>
 										<p class="brewery-summary">${data[i].vicinity}</p>
 										<p class="brewery-summary">${data[i].rating}</p>
@@ -378,6 +378,18 @@ if (!browserSupportsCSSProperty('animation')) {
           title: `${hikeData.trails[userHikes[0]].name}`
         });
 
+       let infowindowH = new google.maps.InfoWindow({
+          	content: `${hikeData.trails[userHikes[0]].name}`,
+          	maxWidth: 200
+        	});
+
+       		//have hike pop up open
+	         infowindowH.open(map, marker);
+
+	         marker.addListener('click', function() {
+          	infowindowH.open(map, marker);
+        	});
+
         /*let marker2 = new google.maps.Marker({
           map: map,
           position: breweryDetails[userBreweries[0]].latlong,
@@ -385,6 +397,7 @@ if (!browserSupportsCSSProperty('animation')) {
         });*/
 
         let markers = [];
+        let infoWindows = [];
 
         let mapItineraryContent = "";
 
@@ -402,12 +415,21 @@ if (!browserSupportsCSSProperty('animation')) {
 	          title: breweryData[userBreweries[i]].name
 	        });
 
+	         infoWindows[i] = new google.maps.InfoWindow({
+          	content: `${breweryData[userBreweries[i]].name}`,
+          	maxWidth: 200
+        	});
+
+	         marker[i].addListener('click', function() {
+          	infoWindows[i].open(map, marker[i]);
+        	});
+
 	        console.log("placing"+breweryData[userBreweries[i]].name);
 
 
 
 				mapItineraryContent += `<li id='${i}'>
-										<img class="img-hikes" src="http://badgerheadgames.com/wp-content/uploads/2018/02/beer-2370783_1920-e1519612752761-1.jpg" alt="${breweryData[userBreweries[i]].name}">
+										<img class="img-brew" src="http://badgerheadgames.com/wp-content/uploads/2018/02/beer-2370783_1920-e1519612752761-1.jpg" alt="${breweryData[userBreweries[i]].name}">
 										<p class="brewery-name">${breweryData[userBreweries[i]].name}</p>
 										<p class="brewery-summary">${breweryData[userBreweries[i]].vicinity}</p>
 										<p class="brewery-summary">${breweryData[userBreweries[i]].rating}</p>
@@ -415,6 +437,8 @@ if (!browserSupportsCSSProperty('animation')) {
 
 			
 			}
+
+		
 
 			$('.map-intinerary').html(mapItineraryContent);
 
