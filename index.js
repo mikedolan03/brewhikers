@@ -366,7 +366,8 @@ if (!browserSupportsCSSProperty('animation')) {
        // let bhmap
         map = new google.maps.Map(document.getElementById('final-map'), {
           center: myLatLng,
-          zoom: 12
+          zoom: 12,
+          gestureHandling: 'cooperative'
         });
 
         //console.log("brewery array", breweryDetails[userBreweries[0]]);
@@ -441,6 +442,8 @@ if (!browserSupportsCSSProperty('animation')) {
 		
 
 			$('.map-intinerary').html(mapItineraryContent);
+
+			
 
 
 

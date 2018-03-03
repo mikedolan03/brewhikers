@@ -113,6 +113,21 @@ button {
 
 }
 
+.generate-trip {
+   position:fixed;
+   left:0px;
+   bottom:0px;
+   height:50px;
+   width:100%;
+   background:#166f07fc;
+}
+
+/* IE 6 */
+* html .generate-trip {
+   position:absolute;
+   top:expression((0-(footer.offsetHeight)+(document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight)+(ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop))+'px');
+}
+
 .greyed {
   background-color: #ffffff40;
   border-color: #ffffff40;
@@ -124,8 +139,8 @@ button {
 
 #final-map {
         height: 100%;
-        /*position: static !important; */
-        overflow: scroll !important;
+        /*position: static !important; 
+        overflow: scroll !important;*/
       }
 
 .map-container {
