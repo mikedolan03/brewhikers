@@ -5,7 +5,7 @@ function main(){
 let userLocationChoice = "Charlottesville";
 let userLat = 0;
 let userLong =0;
-let radiusAmount = 10000;
+let radiusAmount = 16000;
 let hikeData = {};
 let breweryData = {};
 
@@ -155,7 +155,7 @@ if (!browserSupportsCSSProperty('animation')) {
 		
 		if(data.length < 7) {
 
-			radiusAmount += 5000;
+			radiusAmount += 8000;
 
 			if(radiusAmount >=60000) {
 				console.log("no breweries nearby");
@@ -173,8 +173,17 @@ if (!browserSupportsCSSProperty('animation')) {
 
 		breweryData = data;
 
-		console.log("getting data: ", data);
-				console.log("saved data: ", breweryData);
+		//get and add distance data
+		breweryData.forEach(brewery => brewery.distanceMi = findDistance(userLat, userLong, brewery.geometry.location.lat(), brewery.geometry.location.lng() ).distanceMi); 
+		//breweryData[i].distanceMi = findDistance(userLat, userLong, breweryData[i].geometry.location.lat(), breweryData[i].geometry.location.lng() ).distanceMi; 
+
+
+		//sort the data based on distance 
+
+		breweryData.sort((a, b) => a.distanceMi - b.distanceMi);
+
+		//console.log("getting data: ", data);
+				console.log("sorted data: ", breweryData);
 
 
 		let brewerylistContent = '';
@@ -184,6 +193,11 @@ if (!browserSupportsCSSProperty('animation')) {
 		renderBreweryView();
 
 		//if(breweryCount > 6) breweryCount = 6; 
+	}
+
+	function precisionRound(number, precision) {
+  		let factor = Math.pow(10, precision);
+  		return Math.round(number * factor) / factor;
 	}
 
 	function renderBreweryView()
@@ -209,17 +223,20 @@ if (!browserSupportsCSSProperty('animation')) {
 				console.log(i , breweryCount);
 				console.log("lat", breweryData[i].geometry.location.lat(), breweryData[i].geometry.location.lng() );
 
-				let distance = findDistance(userLat, userLong, breweryData[i].geometry.location.lat(), breweryData[i].geometry.location.lng() ).distanceMi; 
+				breweryData[i].distanceMi = findDistance(userLat, userLong, breweryData[i].geometry.location.lat(), breweryData[i].geometry.location.lng() ).distanceMi; 
 
 				brewerylistContent += `<div class="col-4" id='${breweryData[i].place_id}'>
 										<img class="img-brew" src="http://badgerheadgames.com/wp-content/uploads/2018/02/beer-2370783_1920-e1519612752761-1.jpg" alt="${breweryData[i].name}">
 										<p class="brewery-name">${breweryData[i].name}<br />
-										Location: ${breweryData[i].vicinity} - ${distance} miles away<br />
+										Location: ${ precisionRound(breweryData[i].distanceMi, 1)} miles away<br />
 										Rating: ${breweryData[i].rating} stars<br />
 										<button name="brewery" id="brewery${breweryData[i].place_id}" data="${i}" class="js-add-brewery-button"> Add to list</button>
 										</div>`;
 
 										/*
+
+										${breweryData[i].vicinity}
+
 							brewerylistContent += `<li id='${data[i].place_id}'>
 										<img class="img-brew" src="http://badgerheadgames.com/wp-content/uploads/2018/02/beer-2370783_1920-e1519612752761-1.jpg" alt="${data[i].name}">
 										<p class="brewery-name">${data[i].name}</p>
@@ -236,7 +253,7 @@ if (!browserSupportsCSSProperty('animation')) {
 
 						
 
-			console.log(brewerylistContent);
+			console.log(breweryData);
 
 		$('.js-hike-view').addClass('hide');
 		$('.js-brewery-view').removeClass('hide');
@@ -264,6 +281,8 @@ if (!browserSupportsCSSProperty('animation')) {
 			
 			userBreweries.push($(event.currentTarget).attr("data"));
 			console.log('clicked', userBreweries);
+
+			$(event.currentTarget).parent().parent().addClass("highlight");
 
 			let step3text = "";
 			if(userBreweries.length > 0){
@@ -300,6 +319,8 @@ if (!browserSupportsCSSProperty('animation')) {
       		let breweryToRemove = userBreweries.indexOf($(event.currentTarget).attr("data"));
 
       		userBreweries.splice(breweryToRemove, 1);
+
+      		$(event.currentTarget).parent().parent().removeClass("highlight");
 
 			let step3text = "";
 			if(userBreweries.length > 0){

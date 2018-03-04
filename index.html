@@ -83,6 +83,7 @@
 			</section>
 			<section class="js-hike-view hide" aria-live="assertive">
 				<section>
+					<div class="row-full-width-background">
 					<div class="js-progress-section progress-row row">
 						<div class="col-4 progress-box progress-box-left"><p class="js-step1-txt">Step 1: Exploring Charlottesville Area</p>
 							<button class="progress-button">Change</button></div>
@@ -90,6 +91,7 @@
 							<button class="progress-button">Change</button></div>
 						<div class="col-4 progress-box progress-box-right"><p class="js-step3-txt">Step 3: Visiting Star Hill, Devils Backbone, Backyard Brewing Company, Star Hill, Devils Backbone, Backyard Brewing Company. Star Hill, Devils Backbone, Backyard Brewing Company</p>
 							<button class="progress-button">Generate Itinery!</button></div>
+					</div>
 					</div>
 					<div class="row">
 						<div class="col-12">
@@ -113,24 +115,25 @@
 				</section>
 			</section>
 			<section id='js-pick-brew-section' class='js-brewery-view hide' aria-live="assertive">
+				<div class="row-full-width-background">
 				<div class="js-progress-section progress-row row">
 					</div>
-						<form>
-								<fieldset>
-    								<legend class="js-pick-breweries legend-hikes">Pick 1 or more breweries:</legend>
+				</div>
+					<div class="row">
+    					<h1 class="js-pick-breweries legend-hikes">Pick 1 or more breweries:</h1>
+    				</div>
 										<div class="row" id="js-brewery-list" >
 											<img src="http://badgerheadgames.com/wp-content/uploads/2018/02/beer-2370783_1920-e1519612752761-1.jpg" alt="Loading Breweries"> 
 											<p class="brewery-name">Finding some breweries near your hike</p>
 											<p class="brewery-summary">Just a few seconds...</p>
 										</div>
-								</fieldset>
-							</form>
+					
 			</section>
 		<section id="show-map" class='hide' aria-live="assertive">
 			<section>
 				<div class="js-progress-section progress-row row"></div>
 				<div class="row">
-					<div class="col-8">
+					<div class="col-4">
 						<div class="map-container">
 							<div id="final-map" ></div>
 						</div>
@@ -144,7 +147,7 @@
 
 						</div>
 					</div>
-					<div class="col-4">
+					<div class="col-8">
 							<h2>Here's your trip!</h2>
 							<ul class="map-intinerary">
 							</ul>
