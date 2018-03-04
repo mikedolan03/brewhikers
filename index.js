@@ -140,7 +140,7 @@ if (!browserSupportsCSSProperty('animation')) {
 
 			//getDataFromBreweryApi( (userLocationChoice + ",va"), renderBreweryView);
 			
-			getDataFromBreweryGoogleApi( radiusAmount, renderBreweryView);
+			getDataFromBreweryGoogleApi( radiusAmount, BreweryDataCallback);
 
 			//getDataFromBreweryGoogleApi( (userLocationChoice + ",va"), renderBreweryView);
 
@@ -150,17 +150,25 @@ if (!browserSupportsCSSProperty('animation')) {
 
 	}
 
-	function renderBreweryView(data, status){
+	function BreweryDataCallback(data, status){
 		console.log("api call status: ", status);
-
-		if(data.length < 3) {
+		
+		if(data.length < 7) {
 
 			radiusAmount += 5000;
 
-			getDataFromBreweryGoogleApi( radiusAmount, renderBreweryView);
+			if(radiusAmount >=60000) {
+				console.log("no breweries nearby");
+				breweryData = data;
+				renderBreweryView();
+				return;
+			} else {
+
+				getDataFromBreweryGoogleApi( radiusAmount, BreweryDataCallback);
 
 
-			return;
+				return;
+				}
 		}
 
 		breweryData = data;
@@ -173,7 +181,24 @@ if (!browserSupportsCSSProperty('animation')) {
 
 		let breweryCount = data.length;
 
+		renderBreweryView();
+
 		//if(breweryCount > 6) breweryCount = 6; 
+	}
+
+	function renderBreweryView()
+	{
+
+		let brewerylistContent = '';
+
+		let breweryCount = breweryData.length;
+
+		if(breweryCount <= 0) {
+
+			brewerylistContent =`<div class="col-4">
+									<p>No breweries were found within 50km of this hike. </p></div>`
+
+		} else {
 
 
 
@@ -182,8 +207,20 @@ if (!browserSupportsCSSProperty('animation')) {
 			//getBreweryDetailDataFromGoogleApi(data[i].place_id, parseBreweryDetails );
 
 				console.log(i , breweryCount);
+				console.log("lat", breweryData[i].geometry.location.lat(), breweryData[i].geometry.location.lng() );
 
-				brewerylistContent += `<li id='${data[i].place_id}'>
+				let distance = findDistance(userLat, userLong, breweryData[i].geometry.location.lat(), breweryData[i].geometry.location.lng() ).distanceMi; 
+
+				brewerylistContent += `<div class="col-4" id='${breweryData[i].place_id}'>
+										<img class="img-brew" src="http://badgerheadgames.com/wp-content/uploads/2018/02/beer-2370783_1920-e1519612752761-1.jpg" alt="${breweryData[i].name}">
+										<p class="brewery-name">${breweryData[i].name}<br />
+										Location: ${breweryData[i].vicinity} - ${distance} miles away<br />
+										Rating: ${breweryData[i].rating} stars<br />
+										<button name="brewery" id="brewery${breweryData[i].place_id}" data="${i}" class="js-add-brewery-button"> Add to list</button>
+										</div>`;
+
+										/*
+							brewerylistContent += `<li id='${data[i].place_id}'>
 										<img class="img-brew" src="http://badgerheadgames.com/wp-content/uploads/2018/02/beer-2370783_1920-e1519612752761-1.jpg" alt="${data[i].name}">
 										<p class="brewery-name">${data[i].name}</p>
 										<p class="brewery-summary">${data[i].vicinity}</p>
@@ -191,9 +228,11 @@ if (!browserSupportsCSSProperty('animation')) {
 										<button name="brewery" id="brewery${data[i].place_id}" data="${i}" class="js-add-brewery-button"> Add to list</button>
 										
 										</li>`;
+										*/
 
 			
 			}
+		}
 
 						
 
@@ -226,14 +265,20 @@ if (!browserSupportsCSSProperty('animation')) {
 			userBreweries.push($(event.currentTarget).attr("data"));
 			console.log('clicked', userBreweries);
 
-			let step3text = "Step 3: Visiting ";
+			let step3text = "";
+			if(userBreweries.length > 0){
+			 	step3text = "Step 3: Selected " + userBreweries.length
 
-			for(i = 0; i < userBreweries.length; i++)
-			{
-				if(i > 0) step3text	+= ", ";
-				step3text += `${breweryData[userBreweries[i]].name}`;  
 
-			}
+			 	if(userBreweries.length >1) {
+			  	step3text += " breweries to visit.";
+				}  else {
+					step3text += " brewery to visit";
+				}
+
+			}	else {
+					step3text = "Step 3: Choose breweries to visit...";
+				}
 
 			$('.js-step3-txt').html(step3text);
 
@@ -256,9 +301,21 @@ if (!browserSupportsCSSProperty('animation')) {
 
       		userBreweries.splice(breweryToRemove, 1);
 
-			let step3text = "Step 3: Visiting ";
+			let step3text = "";
+			if(userBreweries.length > 0){
+			 	step3text = "Step 3: Selected " + userBreweries.length
 
-			if(userBreweries.length > 0)
+
+			 	if(userBreweries.length >1) {
+			  	step3text += " breweries to visit.";
+				}  else {
+					step3text += " brewery to visit";
+				}
+
+			}	else {
+					step3text = "Step 3: Choose breweries to visit...";
+				}
+			/*if(userBreweries.length > 0)
 			{
 				for(i = 0; i < userBreweries.length; i++)
 				{
@@ -268,14 +325,14 @@ if (!browserSupportsCSSProperty('animation')) {
 				}
 			} else {
 				step3text = "Step 3: Choose breweries to visit...";
-			}
+			} */
 
 			
 			$('.js-step3-txt').html(step3text);
 
 			$('#js-breweries-selected-go-button').removeClass("greyed");
 
-			$(event.currentTarget).removeClass('js-remove-brewery-button').addClass('js-add-brewery-button').html('Select'); 
+			$(event.currentTarget).removeClass('js-remove-brewery-button').addClass('js-add-brewery-button').html('Add'); 
 
 
 
@@ -297,6 +354,70 @@ if (!browserSupportsCSSProperty('animation')) {
 
 	}
 
+//--------------------calculate distance with lat / long
+	
+		
+	/* Based on original script formula by Andrew Hedges, andrew(at)hedges(dot)name used under the MIT license- not recomended to use this code for actual geospatial navigation  */
+	function findDistance(latA, lonA, latB, lonB) {
+
+		console.log("finding distance between:",latA, lonA, latB, lonB);
+
+		let Rm = 3961; // mean radius of the earth (miles) at 39 degrees from the equator
+		let Rk = 6373; // mean radius of the earth (km) at 39 degrees from the equator
+
+		let t1, n1, t2, n2, lat1, lon1, lat2, lon2, dlat, dlon, a, c, dm, dk, mi, km;
+		
+		// get values for lat1, lon1, lat2, and lon2
+		t1 = latA;
+		n1 = lonA;
+		t2 = latB;
+		n2 = lonB;
+		console.log("finding t distance between:", t1, t2);
+
+		// convert coordinates to radians
+		lat1 = deg2rad(t1);
+		lon1 = deg2rad(n1);
+		lat2 = deg2rad(t2);
+		lon2 = deg2rad(n2);
+		console.log("finding deg2rad", lat1, lon1, lat2, lon2);
+
+		// find the differences between the coordinates
+		dlat = lat2 - lat1;
+		dlon = lon2 - lon1;
+		console.log("dlat dlon",dlat, dlon );
+
+
+		// here's the heavy lifting
+		a  = Math.pow(Math.sin(dlat/2),2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon/2),2);
+		c  = 2 * Math.atan2(Math.sqrt(a),Math.sqrt(1-a)); // great circle distance in radians
+		dm = c * Rm; // great circle distance in miles
+		dk = c * Rk; // great circle distance in km
+		
+		console.log("dm dk ",dm, dk);
+
+		// round the results down to the nearest 1/1000
+		mi = round(dm);
+		km = round(dk);
+		
+		
+		return {distanceMi: mi, distanceKm: km };
+	}
+	
+	
+	// convert degrees to radians
+	function deg2rad(deg) {
+		rad = deg * Math.PI/180; // radians = degrees * pi/180
+		return rad;
+	}
+	
+	
+	// round to the nearest 1/1000
+	function round(x) {
+		return Math.round( x * 1000) / 1000;
+	}
+
+
+
 	function parseBreweryDetails(place, status)
 	{
 		let newbrewerylistContent = ""; 
@@ -313,9 +434,9 @@ if (!browserSupportsCSSProperty('animation')) {
 
 		newbrewerylistContent += `<li>
 						<img class="img-hikes" src="http://badgerheadgames.com/wp-content/uploads/2018/02/beer-2370783_1920-e1519612752761-1.jpg" alt="${place.name}">
-						<p class="brewery-name">${place.name}</p>
-						<p class="brewery-address">${place.vicinity}</p>
-						<p class="brewery-rating">${place.rating}</p>
+						<p class="brewery-name">${place.name}<br />
+						Location: ${place.vicinity} - <br />
+						Rating: ${place.rating} stars</p>
 						<button name="brewery" id="brewery${place.place_id}" data="${breweryIndex}" class="js-add-brewery-button"> Add to list</button>`;
 
 		if(place.reviews){
@@ -391,6 +512,10 @@ if (!browserSupportsCSSProperty('animation')) {
           	infowindowH.open(map, marker);
         	});
 
+	        var directionsService = new google.maps.DirectionsService;
+        	var directionsDisplay = new google.maps.DirectionsRenderer;
+        	directionsDisplay.setMap(map);
+
         /*let marker2 = new google.maps.Marker({
           map: map,
           position: breweryDetails[userBreweries[0]].latlong,
@@ -443,11 +568,25 @@ if (!browserSupportsCSSProperty('animation')) {
 
 			$('.map-intinerary').html(mapItineraryContent);
 
-			
+
 
 
 
     }
+
+    function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+        directionsService.route({
+          origin: document.getElementById('start').value,
+          destination: document.getElementById('end').value,
+          travelMode: 'DRIVING'
+        }, function(response, status) {
+          if (status === 'OK') {
+            directionsDisplay.setDirections(response);
+          } else {
+            window.alert('Directions request failed due to ' + status);
+          }
+        });
+      }
 
       
 
