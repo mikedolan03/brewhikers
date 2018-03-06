@@ -1,6 +1,5 @@
-var map;
-
 function main(){
+
 
 let userLocationChoice = "Charlottesville";
 let userLat = 0;
@@ -11,22 +10,26 @@ let breweryData = {};
 
 let userLoc;
 const breweryDetails = [];
-const userHikes = []; 
-let userBreweries = []; 
-let brewerylistContent = "";
-//getDataFromApi("", renderHikeView);
 
+//hikes the user has selected - currently just one is allowed but could branch to more hikes as a feature
+const userHikes = []; 
+
+//breweries the user has selected to visit
+let userBreweries = []; 
+
+let brewerylistContent = "";
+
+//currentBrewery is the first brewery currently listed 
+let currentBrewery = 0;
+
+
+//this is used to as a fall back if the CSS loading animation is not supported on an older browser
 if (!browserSupportsCSSProperty('animation')) {
   $('.sk-circle').html('<img src="https://media0.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif">');
   }
 
-	$(".js-pick-hike").click( event => {
-		event.preventDefault();
-		console.log('clicked');
-		$('body').scrollTop( $('.map-view').offset().top);
-	} );
 
-
+//This function creates the Progress bar at the top of the page that lets the user know where they are in the program...
 	function renderProgressSection(currentView){
 
 		let progressContent	= "";
@@ -85,7 +88,12 @@ if (!browserSupportsCSSProperty('animation')) {
 
 	}
 
+
+// This function renders the list of hikes for the user to select
 	function renderHikeView(data, status){
+
+		document.body.scrollTop = 0;
+    	document.documentElement.scrollTop = 0;
 
 		hikeData = data; 
 
@@ -98,9 +106,10 @@ if (!browserSupportsCSSProperty('animation')) {
 		for(let i = 0; i < data.trails.length; i++)
 		{
 		 listContent += `<li><img class="img-hikes" src="${data.trails[i].imgSmall}" alt="${data.trails[i].name}"> 
-								<p class="hike-name">${data.trails[i].name}</p><button class="js-select-hike-button small-right" data="${i}">Select</button>
+								<p class="hike-name">${data.trails[i].name}</p>
 								<p class="hike-summary">${data.trails[i].summary}</p>
 								<p class="hike-info">Distance: ${data.trails[i].length}<br>Difficulty: ${data.trails[i].difficulty}<br>Rating: ${data.trails[i].stars}/5</p>
+								<button class="js-select-hike-button small-right" data="${i}">Select</button>
 								</li>`;
 		}
 
@@ -132,20 +141,11 @@ if (!browserSupportsCSSProperty('animation')) {
 			$('.modal-text').html(`Finding the closest breweries to ${data.trails[userHikeChoice].name}`);
 			$('.modal').removeClass('hide');
 
-
-
-			//console.log("loc or:"+data.trails[userHikeChoice].location+" loc"+ data.trails[userHikeChoice].location.replace(/\s/g,''));
-
-			//getDataFromBreweryApi(data.trails[userHikeChoice].location.replace(/\s/g,''), renderBreweryView);
-
-			//getDataFromBreweryApi( (userLocationChoice + ",va"), renderBreweryView);
 			
-			getDataFromBreweryGoogleApi( radiusAmount, BreweryDataCallback);
+			//CALL 
+			getBreweryDataFromGoogleApi( radiusAmount, BreweryDataCallback);
 
-			//getDataFromBreweryGoogleApi( (userLocationChoice + ",va"), renderBreweryView);
-
-
-
+		
 		});
 
 	}
@@ -164,7 +164,7 @@ if (!browserSupportsCSSProperty('animation')) {
 				return;
 			} else {
 
-				getDataFromBreweryGoogleApi( radiusAmount, BreweryDataCallback);
+				getBreweryDataFromGoogleApi( radiusAmount, BreweryDataCallback);
 
 
 				return;
@@ -203,6 +203,9 @@ if (!browserSupportsCSSProperty('animation')) {
 	function renderBreweryView()
 	{
 
+		document.body.scrollTop = 0;
+    	document.documentElement.scrollTop = 0;
+
 		let brewerylistContent = '';
 
 		let breweryCount = breweryData.length;
@@ -213,12 +216,22 @@ if (!browserSupportsCSSProperty('animation')) {
 									<p>No breweries were found within 50km of this hike. </p></div>`
 
 		} else {
+			
+			
+			let i = currentBrewery;
+			let ii = 0;
+
+			let count = 0;
+
+			if(i+6 < breweryData.length) { ii = (i+6); } else { ii = breweryData.length;}
+
+			brewerylistContent = `<div class="col-4"><button class="previous-button"><< Previous Brewery</button></div>
+			<div class="col-4">Showing results ${i+1} to ${ii} </div>
+			<div class="col-4"><button class="next-button">Next Brewery >></button></div>`
 
 
-
-		for(let i = 0; i < breweryCount; i++) {
-
-			//getBreweryDetailDataFromGoogleApi(data[i].place_id, parseBreweryDetails );
+			while (count < 6)
+			{
 
 				console.log(i , breweryCount);
 				console.log("lat", breweryData[i].geometry.location.lat(), breweryData[i].geometry.location.lng() );
@@ -232,36 +245,23 @@ if (!browserSupportsCSSProperty('animation')) {
 										Rating: ${breweryData[i].rating} stars<br />
 										<button name="brewery" id="brewery${breweryData[i].place_id}" data="${i}" class="js-add-brewery-button"> Add to list</button>
 										</div>`;
+				count++;
+				i++; 
 
-										/*
+				if(i >= breweryData.length) count = 10;
 
-										${breweryData[i].vicinity}
-
-							brewerylistContent += `<li id='${data[i].place_id}'>
-										<img class="img-brew" src="http://badgerheadgames.com/wp-content/uploads/2018/02/beer-2370783_1920-e1519612752761-1.jpg" alt="${data[i].name}">
-										<p class="brewery-name">${data[i].name}</p>
-										<p class="brewery-summary">${data[i].vicinity}</p>
-										<p class="brewery-summary">${data[i].rating}</p>
-										<button name="brewery" id="brewery${data[i].place_id}" data="${i}" class="js-add-brewery-button"> Add to list</button>
-										
-										</li>`;
-										*/
-
-			
 			}
+
+
 		}
-
-						
-
-			console.log(breweryData);
-
+			
 		$('.js-hike-view').addClass('hide');
+
 		$('.js-brewery-view').removeClass('hide');
 
 		$('.js-breweries-search-results').html(`Choose from ${breweryCount} breweries listed below.`);
 
-		$('.js-pick-breweries').html(`Step 3: Pick one of these ${breweryCount} breweries near ${hikeData.trails[userHikes[0]].name}`);
-
+		$('.js-pick-breweries').html(`Step 3: Choose a few breweries from this list of ${breweryCount} near ${hikeData.trails[userHikes[0]].name}`);
 
 		$('#js-brewery-list').html(brewerylistContent);	
 
@@ -276,7 +276,29 @@ if (!browserSupportsCSSProperty('animation')) {
 
 		//------------------create dynamic event listeners for new brewery BUTTONS 
 
-		 $("#js-brewery-list").on("click", ".js-add-brewery-button", function (event) {
+		$(".previous-button").click( event => {
+				event.preventDefault();
+				console.log('clicked', currentBrewery);
+				currentBrewery--;
+				if(currentBrewery < 0) {currentBrewery = breweryData.length - 1};
+				renderBreweryView();
+
+		});
+
+		$(".next-button").click( event => {
+				event.preventDefault();
+				console.log('clicked');
+				currentBrewery++;
+				if((currentBrewery+7) >= breweryData.length) {
+				 return; 
+				} else {
+					renderBreweryView();
+				  }
+
+		});
+
+
+		$("#js-brewery-list").on("click", ".js-add-brewery-button", function (event) {
       		event.preventDefault();
 			
 			userBreweries.push($(event.currentTarget).attr("data"));
@@ -285,18 +307,18 @@ if (!browserSupportsCSSProperty('animation')) {
 			$(event.currentTarget).parent().parent().addClass("highlight");
 
 			let step3text = "";
+
 			if(userBreweries.length > 0){
 			 	step3text = "Step 3: Selected " + userBreweries.length
 
-
 			 	if(userBreweries.length >1) {
-			  	step3text += " breweries to visit.";
-				}  else {
-					step3text += " brewery to visit";
-				}
+			  		step3text += " breweries to visit.";
+				}  	else {
+						step3text += " brewery to visit";
+					}
 
-			}	else {
-					step3text = "Step 3: Choose breweries to visit...";
+			} else {
+				step3text = "Step 3: Choose breweries to visit...";
 				}
 
 			$('.js-step3-txt').html(step3text);
@@ -305,15 +327,20 @@ if (!browserSupportsCSSProperty('animation')) {
 
 			$(event.currentTarget).removeClass('js-add-brewery-button').addClass('js-remove-brewery-button').html('Remove'); 
 
+			$('.generate-trip').removeClass('hide');
 
+			$('.generate-trip').click( event => { 
+				event.preventDefault();
+				$('.js-brewery-view').addClass('hide');
+				$('#show-map').removeClass('hide');
+				initMap();
+			} );
 
-				//here we want to then replace the Add button with a Remove button and set a listener to the button.
-				//replace button jquery replace? with button and then add new event listener. 
 
 		});
 
 
-		 $('#js-brewery-list').on('click', '.js-remove-brewery-button', function (event) {
+		$('#js-brewery-list').on('click', '.js-remove-brewery-button', function (event) {
       		event.preventDefault();
 			
       		let breweryToRemove = userBreweries.indexOf($(event.currentTarget).attr("data"));
@@ -336,19 +363,8 @@ if (!browserSupportsCSSProperty('animation')) {
 			}	else {
 					step3text = "Step 3: Choose breweries to visit...";
 				}
-			/*if(userBreweries.length > 0)
-			{
-				for(i = 0; i < userBreweries.length; i++)
-				{
-					if(i > 0) step3text	+= ", ";
-					step3text += `${breweryData[userBreweries[i]].name}`;  
-
-				}
-			} else {
-				step3text = "Step 3: Choose breweries to visit...";
-			} */
-
 			
+		
 			$('.js-step3-txt').html(step3text);
 
 			$('#js-breweries-selected-go-button').removeClass("greyed");
@@ -356,9 +372,6 @@ if (!browserSupportsCSSProperty('animation')) {
 			$(event.currentTarget).removeClass('js-remove-brewery-button').addClass('js-add-brewery-button').html('Add'); 
 
 
-
-				//here we want to then replace the Add button with a Remove button and set a listener to the button.
-				//replace button jquery replace? with button and then add new event listener. 
 
 		});
 
@@ -438,7 +451,7 @@ if (!browserSupportsCSSProperty('animation')) {
 	}
 
 
-
+//Function currently not used but could be used to give user more info
 	function parseBreweryDetails(place, status)
 	{
 		let newbrewerylistContent = ""; 
@@ -466,31 +479,7 @@ if (!browserSupportsCSSProperty('animation')) {
 							
 		newbrewerylistContent += `</li>`;
 
-		$(`#${place.place_id}`).html(newbrewerylistContent);
-
-
-		
-
-		/*$(".js-add-brewery-button").click( event => {
-			event.preventDefault();
-			console.log('clicked');
-			userHikes.push(parseInt( $(event.currentTarget).attr("data")));
-
-				//here we want to then replace the Add button with a Remove button and set a listener to the button.
-				//replace button jquery replace? with button and then add new event listener. 
-
-		});
-		*/
-
-				
-
-	}
-
-	function getHikeData(){
-
-	}
-
-	function parseHikeData(){
+		$(`#${place.place_id}`).html(newbrewerylistContent);		
 
 	}
 
@@ -515,10 +504,12 @@ if (!browserSupportsCSSProperty('animation')) {
         //console.log("brewery array", breweryDetails[userBreweries[0]]);
 
         // Create a marker and set its position.
+        let hikeMarker = 'http://badgerheadgames.com/wp-content/uploads/2018/03/greenmarker.png';
         let marker = new google.maps.Marker({
           map: map,
           position: myLatLng,
-          title: `${hikeData.trails[userHikes[0]].name}`
+          title: `${hikeData.trails[userHikes[0]].name}`,
+          icon: hikeMarker
         });
 
        let infowindowH = new google.maps.InfoWindow({
@@ -533,18 +524,22 @@ if (!browserSupportsCSSProperty('animation')) {
           	infowindowH.open(map, marker);
         	});
 
-	        var directionsService = new google.maps.DirectionsService;
-        	var directionsDisplay = new google.maps.DirectionsRenderer;
+	        let directionsService = new google.maps.DirectionsService;
+        	let directionsDisplay = new google.maps.DirectionsRenderer({
+      										suppressMarkers: true
+  										});
+ 
+  
+
         	directionsDisplay.setMap(map);
+        	directionsDisplay.setPanel(document.getElementById('directions-panel'));
 
-        /*let marker2 = new google.maps.Marker({
-          map: map,
-          position: breweryDetails[userBreweries[0]].latlong,
-          title: breweryDetails[userBreweries[0]].name
-        });*/
-
+      
+        let waypts = [];
         let markers = [];
         let infoWindows = [];
+        let brewMarker = 'http://badgerheadgames.com/wp-content/uploads/2018/03/orangemarker.png';
+
 
         let mapItineraryContent = "";
 
@@ -559,8 +554,14 @@ if (!browserSupportsCSSProperty('animation')) {
         	marker[i] = new google.maps.Marker({
 	          map: map,
 	          position: breweryData[userBreweries[i]].geometry.location,
-	          title: breweryData[userBreweries[i]].name
+	          title: breweryData[userBreweries[i]].name,
+	          icon: brewMarker
 	        });
+
+	        waypts.push({
+              location: {'placeId': breweryData[userBreweries[i]].place_id},
+              stopover: true
+            });
 
 	         infoWindows[i] = new google.maps.InfoWindow({
           	content: `${breweryData[userBreweries[i]].name}`,
@@ -575,7 +576,7 @@ if (!browserSupportsCSSProperty('animation')) {
 
 
 
-				mapItineraryContent += `<li id='${i}'>
+			mapItineraryContent += `<li id='${i}'>
 										<img class="img-brew" src="http://badgerheadgames.com/wp-content/uploads/2018/02/beer-2370783_1920-e1519612752761-1.jpg" alt="${breweryData[userBreweries[i]].name}">
 										<p class="brewery-name">${breweryData[userBreweries[i]].name}</p>
 										<p class="brewery-summary">${breweryData[userBreweries[i]].vicinity}</p>
@@ -583,22 +584,30 @@ if (!browserSupportsCSSProperty('animation')) {
 										</li>`;
 
 			
-			}
+		}
 
 		
 
-			$('.map-intinerary').html(mapItineraryContent);
+		$('.map-intinerary').html(mapItineraryContent);
 
-
-
-
+		$('.js-directions-button').click(event => {
+			event.preventDefault();
+			calculateAndDisplayRoute(directionsService, directionsDisplay, waypts);
+		});
 
     }
 
-    function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+    function calculateAndDisplayRoute(directionsService, directionsDisplay, waypts) {
+ console.log(breweryData[0]);
+
+    	let myLatLng = {lat: userLat, lng: userLong};
+		let endlatlong = {lat: breweryData[0].geometry.location.lat(), lng: breweryData[0].geometry.location.lng()};
+
         directionsService.route({
-          origin: document.getElementById('start').value,
-          destination: document.getElementById('end').value,
+          origin: myLatLng,
+          destination: endlatlong,
+          waypoints: waypts,
+          optimizeWaypoints: true,
           travelMode: 'DRIVING'
         }, function(response, status) {
           if (status === 'OK') {
@@ -610,153 +619,99 @@ if (!browserSupportsCSSProperty('animation')) {
       }
 
       
+	//API CALLS
+
+	function getHikeDataFromApi(searchTerm, latitude, longitude, maxDistance, callback) {
+
+		const HIKE_SEARCH_URL = 'https://www.hikingproject.com/data/get-trails';
+
+		const query = {
+		  lat: latitude,
+		  lon: longitude,
+		  maxDistance: maxDistance,
+		  key: '200222039-9fe0c8f1c7fdd7389cb046d84ce4f77e'
+		};
+
+		$.getJSON(HIKE_SEARCH_URL, query, callback);
+	}
+
+	function getBreweryDataFromGoogleApi(radius, callback) {
+
+		
+	 userLoc = new google.maps.LatLng(userLat,userLong);
+
+	 map = new google.maps.Map(document.getElementById('final-map'), {
+	      center: userLoc,
+	      zoom: 15
+	    });
+
+	  let request = {
+	    location: userLoc,
+	    radius: `${radius}`,
+	    keyword: 'brewery'
+	  };
+
+	  console.log(request.radius);
+
+	  service = new google.maps.places.PlacesService(map);
+	  service.nearbySearch(request, callback);
+
+		//$.getJSON(BREWERY_SEARCH_URL, '', callback);
+	}
 
 
-function generateMapMarkers() {
-        let myLatLng = {lat: userLat, lng: userLong};
+	function getBreweryDetailDataFromGoogleApi(placeID, callback) {
 
-        
-        //console.log("brewery array", breweryDetails[userBreweries[0]]);
+		console.log(placeID);
 
-        // Create a marker and set its position.
-        let marker = new google.maps.Marker({
-          map: map,
-          position: myLatLng,
-          title: 'Starting Area'
-        });
+	 let request = {
+	  	placeId: `${placeID}`
+		};
 
-        /*let marker2 = new google.maps.Marker({
-          map: map,
-          position: breweryDetails[userBreweries[0]].latlong,
-          title: breweryDetails[userBreweries[0]].name
-        });*/
+		console.log(request);
 
-        let markers = [];
+	service = new google.maps.places.PlacesService(map);
+	service.getDetails(request, callback);
 
-        for (let i = 0; i < userBreweries.length; i++)
-        {
-        	marker[i] = new google.maps.Marker({
-	          map: map,
-	          position: breweryData[userBreweries[i]].geometry.location,
-	          title: breweryData[userBreweries[i]].name
-	        });
-
-        }
-
-      }
-
-//const HIKE_SEARCH_URL = 'https://www.hikingproject.com/data/get-trails?lat=38.6647&lon=-78.4581&maxDistance=20&key=200222039-9fe0c8f1c7fdd7389cb046d84ce4f77e';
-
-function getDataFromApi(searchTerm, latitude, longitude, maxDistance, callback) {
-
-	const BREWERY_SEARCH_URL = 'http://beermapping.com/webservice/loccity/66bbabba983697bf56465bf8e1a3de0e/Charlottesville,va&s=json';
-	const HIKE_SEARCH_URL = 'https://www.hikingproject.com/data/get-trails';
-
-	const query = {
-	  lat: latitude,
-	  lon: longitude,
-	  maxDistance: maxDistance,
-	  key: '200222039-9fe0c8f1c7fdd7389cb046d84ce4f77e'
-	};
-
-	$.getJSON(HIKE_SEARCH_URL, query, callback);
-}
-/*
-function getDataFromBreweryApi(city, callback) {
-
-	let BREWERY_SEARCH_URL = '';
-	BREWERY_SEARCH_URL = 'http://beermapping.com/webservice/loccity/66bbabba983697bf56465bf8e1a3de0e/' + city + '&s=json';
-
-	$.getJSON(BREWERY_SEARCH_URL, '', callback);
-}
-*/
-function getDataFromBreweryGoogleApi(radius, callback) {
-
-	
- userLoc = new google.maps.LatLng(userLat,userLong);
-
- map = new google.maps.Map(document.getElementById('final-map'), {
-      center: userLoc,
-      zoom: 15
-    });
-
-  let request = {
-    location: userLoc,
-    radius: `${radius}`,
-    keyword: 'brewery'
-  };
-
-  console.log(request.radius);
-
-  service = new google.maps.places.PlacesService(map);
-  service.nearbySearch(request, callback);
-
-	//$.getJSON(BREWERY_SEARCH_URL, '', callback);
-}
+		
+	}
 
 
-function getBreweryDetailDataFromGoogleApi(placeID, callback) {
+	function getLocationAndCallHikesAPI(userLocationChoice){
 
-	console.log(placeID);
-
- let request = {
-  	placeId: `${placeID}`
-	};
-
-	console.log(request);
-
-service = new google.maps.places.PlacesService(map);
-service.getDetails(request, callback);
-
-	//$.getJSON(BREWERY_SEARCH_URL, '', callback);
-}
-
-
-function callb(data, status)
-{
-
-	console.log("getting data: ", data);
-	//console.log("getting data: "+ data.trails[0].name);
-
-}
-
-
-function getLocationAndCallHikesAPI(userLocationChoice)
-{
-
-if(userLocationChoice == "Great Falls") { 
-			userLat = 38.9982;
-			userLong = -77.2883;
-			getDataFromApi("",38.9982,-77.2883,30, renderHikeView);
+	if(userLocationChoice == "Great Falls") { 
+				userLat = 38.9982;
+				userLong = -77.2883;
+				getHikeDataFromApi("",38.9982,-77.2883,30, renderHikeView);
+			}
+			if(userLocationChoice === "Charlottesville") {
+			userLat = 38.0293;
+				userLong = -78.4767; 
+			getHikeDataFromApi("",38.0293,-78.4767,30, renderHikeView);
 		}
-		if(userLocationChoice === "Charlottesville") {
-		userLat = 38.0293;
-			userLong = -78.4767; 
-		getDataFromApi("",38.0293,-78.4767,30, renderHikeView);
+			if(userLocationChoice === "Harrisonburg") { 
+				userLat = 38.4496;
+				userLong = -78.8689; 
+			getHikeDataFromApi("",38.4496,-78.8689,30, renderHikeView);
+		}
+			if(userLocationChoice === "Roanoke") { 
+				userLat = 37.2710;
+				userLong = -79.9414; 
+			getHikeDataFromApi("",37.2710,-79.9414,30, renderHikeView);
+		}	
 	}
-		if(userLocationChoice === "Harrisonburg") { 
-			userLat = 38.4496;
-			userLong = -78.8689; 
-		getDataFromApi("",38.4496,-78.8689,30, renderHikeView);
-	}
-		if(userLocationChoice === "Roanoke") { 
-			userLat = 37.2710;
-			userLong = -79.9414; 
-		getDataFromApi("",37.2710,-79.9414,30, renderHikeView);
-	}	
-}
 
-$(".js-pick-location-button").click( event => {
-		event.preventDefault();
-		console.log('clicked');
-		userLocationChoice = $("select").val(); 
-		console.log("location"+userLocationChoice);
+	$(".js-pick-location-button").click( event => {
+			event.preventDefault();
+			console.log('clicked');
+			userLocationChoice = $("select").val(); 
+			console.log("location"+userLocationChoice);
 
-		
-		getLocationAndCallHikesAPI(userLocationChoice);
-		
+			
+			getLocationAndCallHikesAPI(userLocationChoice);
+			
 
-	} );
+		} );
 
 }
 
