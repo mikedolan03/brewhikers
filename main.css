@@ -27,6 +27,17 @@ header {
   margin-left: auto;
   }
 
+  .logo {
+    font-family: 'Pacifico', cursive;
+    font-size: 2em; 
+    padding-left: 5px;
+    padding-top: 5px;
+    margin-bottom: 20px;
+    -ms-transform: rotate(-7deg); /* IE 9 */
+    -webkit-transform: rotate(-7deg); /* Safari 3-8 */
+    transform: rotate(-7deg);
+  }
+
   .row-full-width-background {
     background-color: green;
     color: white;
@@ -249,7 +260,7 @@ header h1 {
 }
 
 .legend-hikes {
-  font-size: 1.5em;
+  font-size: 1em;
   font-weight:  600;
  text-shadow: 0px 0px black;
 }
@@ -302,6 +313,11 @@ input[type=checkbox]:checked ~ label{
 .hide-on-mobile
 {
   display: none; 
+}
+
+.hide-on-big
+{
+  display: block;
 }
 
 .right-side{
@@ -473,12 +489,29 @@ border-style: none;
   display: block;
 }
 
+.hide-on-big
+{
+  display: none;
+}
+
 .right-side{
  display: none;
 }
   .top-banner {
     height:750px;
 
+  }
+
+.logo {
+    font-family: 'Pacifico', cursive;
+    font-size: 3em; 
+    float: left;
+    left: 0px;
+    padding-left: 10px;
+    padding-top: 10px;
+    -ms-transform: rotate(-7deg); /* IE 9 */
+    -webkit-transform: rotate(-7deg); /* Safari 3-8 */
+    transform: rotate(-7deg);
   }
 
   .top-banner-grey {

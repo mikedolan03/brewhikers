@@ -10,6 +10,7 @@ let breweryData = {};
 let editMenuShowing = false;
 let userLoc;
 const breweryDetails = [];
+let showAmount = 6;
 
 //hikes the user has selected - currently just one is allowed but could branch to more hikes as a feature
 const userHikes = []; 
@@ -251,14 +252,18 @@ if (!browserSupportsCSSProperty('animation')) {
 
 			let count = 0;
 
-			if(i+6 < breweryData.length) { ii = (i+6); } else { ii = breweryData.length;}
+			if(i+showAmount < breweryData.length) { 
+				ii = (i+showAmount); 
+			} else { 
+				ii = breweryData.length;
+				}
 
-			brewerylistContent = `<div class="col-4"><button class="previous-button"><< Previous Brewery</button></div>
-			<div class="col-4">Showing results ${i+1} to ${ii} </div>
-			<div class="col-4"><button class="next-button">Next Brewery >></button></div>`
+			brewerylistContent = `<div class="col-4 hide-on-mobile"><button class="previous-button"><< Previous Brewery</button></div>
+			<div class="col-4 hide-on-mobile">Showing results ${i+1} to ${ii} </div>
+			<div class="col-4 hide-on-mobile"><button class="next-button">Next Brewery >></button></div>`
 
 
-			while (count < 6)
+			while (count < showAmount)
 			{
 
 				console.log(i , breweryCount);
@@ -289,9 +294,15 @@ if (!browserSupportsCSSProperty('animation')) {
 				count++;
 				i++; 
 
-				if(i >= breweryData.length) count = 10;
+				if(i >= breweryData.length) count = 1000;
 
 			}
+
+			if(showAmount < breweryData.length) {
+				brewerylistContent += `<div class="col-12 hide-on-big">
+									<button class="js-show-more">Show more breweries</button>
+									</div>`;
+								}
 
 
 		}
@@ -316,6 +327,14 @@ if (!browserSupportsCSSProperty('animation')) {
 		
 
 		//------------------create dynamic event listeners for new brewery BUTTONS 
+
+		$(".js-show-more").click( event => {
+				event.preventDefault();
+				console.log('clicked');
+				showAmount = showAmount + 6; 
+				renderBreweryView();
+
+		});
 
 		$(".previous-button").click( event => {
 				event.preventDefault();
