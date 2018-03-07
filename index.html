@@ -4,6 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, height=device-height">
 	<title>Brew Hikers</title>
+	<link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="grid.css">
 	<link rel="stylesheet" type="text/css" href="main.css">
 		<link rel="stylesheet" type="text/css" href="animations.css">
@@ -20,6 +21,7 @@
 			<section class="js-location-view">
 				<header role = "banner" class="top-banner">
 					<div class="top-banner-grey">
+						<div class="logo">Brew Hikers</div>
 						<div class="select-form-container">
 							<div class="select-form">
 								<h1>Plan your hiking and beer tasting road trip today.</h1>
@@ -83,6 +85,7 @@
 			</section>
 			<section class="js-hike-view hide" aria-live="assertive">
 				<section>
+					<div class="row-full-width-background">
 					<div class="js-progress-section progress-row row">
 						<div class="col-4 progress-box progress-box-left"><p class="js-step1-txt">Step 1: Exploring Charlottesville Area</p>
 							<button class="progress-button">Change</button></div>
@@ -90,6 +93,7 @@
 							<button class="progress-button">Change</button></div>
 						<div class="col-4 progress-box progress-box-right"><p class="js-step3-txt">Step 3: Visiting Star Hill, Devils Backbone, Backyard Brewing Company, Star Hill, Devils Backbone, Backyard Brewing Company. Star Hill, Devils Backbone, Backyard Brewing Company</p>
 							<button class="progress-button">Generate Itinery!</button></div>
+					</div>
 					</div>
 					<div class="row">
 						<div class="col-12">
@@ -113,41 +117,53 @@
 				</section>
 			</section>
 			<section id='js-pick-brew-section' class='js-brewery-view hide' aria-live="assertive">
+				<div class="row-full-width-background">
 				<div class="js-progress-section progress-row row">
 					</div>
+				</div>
 					<div class="row">
-						<div class="col-12">
-							<form>
-								<fieldset>
-    								<legend class="js-pick-breweries legend-hikes">Pick 1 or more breweries:</legend>
-										<ul id="js-brewery-list" >
+    					<h1 class="js-pick-breweries legend-hikes">Pick 1 or more breweries:</h1>
+    				</div>
+										<div class="row" id="js-brewery-list" >
 											<img src="http://badgerheadgames.com/wp-content/uploads/2018/02/beer-2370783_1920-e1519612752761-1.jpg" alt="Loading Breweries"> 
 											<p class="brewery-name">Finding some breweries near your hike</p>
 											<p class="brewery-summary">Just a few seconds...</p>
-										</ul>
-								</fieldset>
-							</form>
-						</div>
-					</div>
+										</div>
+					
 			</section>
 		<section id="show-map" class='hide' aria-live="assertive">
 			<section>
-				<div class="row">
-				<div class="col-6 map-container ">
-					<h2>Here's your trip map!</h2>
-						<div id="final-map" ></div>
+				<div class="row-full-width-background">
+					<div class="js-progress-section progress-row row">						
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-12">
-						<h2>Here's your trip!</h2>
-						<ul class="map-intinerary">
-						</ul>
+					<div class="col-6">
+						<h2>Your Trip Map</h2>
+						<div class="map-container">
+							<div id="final-map" ></div>
+						</div>
+						<div id="directions-panel">
+							<button class="js-directions-button">Click for directions</button>
+							
+						</div>
 					</div>
+					<div class="col-6">
+							<h2>Hike and Breweries to Visit</h2>
+							<ul class="map-intinerary">
+							</ul>
+					</div>
+			
 				</div>
+
 
 			</section>
 
+		</section>
+		<section class="js-green-go-button">
+			<div class="generate-trip hide">
+				<button class="generate-trip-button">Generate Trip Plan</button>
+			</div>
 		</section>
 		<section>
 			<div class = "modal hide">
