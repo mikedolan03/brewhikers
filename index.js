@@ -410,7 +410,7 @@ getLocationFromGooglePlacesApi();
 
 			$(event.currentTarget).removeClass('js-add-brewery-button').addClass('js-remove-brewery-button').html('Remove'); 
 
-			$('.generate-trip').removeClass('hide');
+			$('.generate-trip').removeClass('hide').html(`<h2>1 hike and ${userBreweries.length} breweries selected -</h2> <button class="generate-trip-button">Generate Trip Plan</button>`);
 
 			
 		});
@@ -447,6 +447,7 @@ getLocationFromGooglePlacesApi();
 
 			}	else {
 					step3text = "Step 3: Choose breweries to visit...";
+					$('.generate-trip').addClass('hide');
 				}
 			
 		
@@ -694,7 +695,7 @@ function BreweryDataCallback(data, status){
        // let bhmap
         map = new google.maps.Map(document.getElementById('final-map'), {
           center: myLatLng,
-          zoom: 12,
+          zoom: 11,
           gestureHandling: 'cooperative'
         });
 
@@ -740,7 +741,7 @@ function BreweryDataCallback(data, status){
 
         let mapItineraryContent = "";
 
-        mapItineraryContent += `<li><img class="img-hikes" src="${hikeData.trails[userHikes[0]].imgSmall}" alt="${hikeData.trails[userHikes[0]].name}"> 
+        mapItineraryContent += `<li><img class="img-brew" src="${hikeData.trails[userHikes[0]].imgSmall}" alt="${hikeData.trails[userHikes[0]].name}"> 
 								<p class="hike-name">${hikeData.trails[userHikes[0]].name}</p>
 								<p class="hike-summary">${hikeData.trails[userHikes[0]].summary}</p>
 								<p class="hike-info">Distance: ${hikeData.trails[userHikes[0]].length}<br>Difficulty: ${hikeData.trails[userHikes[0]].difficulty}<br>Rating: ${hikeData.trails[userHikes[0]].stars}/5</p>
@@ -882,7 +883,7 @@ function BreweryDataCallback(data, status){
 
 		map = new google.maps.Map(document.getElementById('final-map'), {
 	      center: userLoc,
-	      zoom: 13
+	      zoom: 11
 	    });
 		 console.log("getting input");
 		let input = document.getElementById('auto-complete-location'); 
@@ -897,57 +898,114 @@ function BreweryDataCallback(data, status){
               						componentRestrictions: countryRestrict
             						});
 
-		autocomplete.addListener('place_changed', function() {
+		autocomplete.addListener('place_changed', function() { handleChange(); });
+
+		var searchButton = document.getElementById('js-pick-loc-button');
+        searchButton.onclick = function() {
+          handleChange("button");
+        };
+
+		function handleChange(submitType) {
+
+          console.log(autocomplete);
           
-          var place = autocomplete.getPlace();
-          if (!place.geometry) {
+          let place;
+          if(submitType	= "button") {
+          	
+	          let placeName = autocomplete.gm_accessors_.place.dd.predictions[0].b;
 
-          	console.log("oops no data...");
-	            // User entered the name of a Place that was not suggested and
-	            // pressed the Enter key, or the Place Details request failed.
-	          
-	       		autocompleteService = new google.maps.places.AutocompleteService();
-	        	autocompleteService.getPlacePredictions(
-		        	{
-		                'input': place.name,
-		                'offset': place.name.length,
-		                'componentRestrictions': {'country':  ['us', 'ca']},
-		                'types': ['(cities)']
-		            },
-		            function listentoresult(list, status) {
-		                if(list == null || list.length == 0) {
-		                    // There are no suggestions available.
-		                    // The user saw an empty list and hit enter.
-		                    console.log("No results");
-		                } else {
-		                    console.log("we have some autocomplete results to look at");
-		                    placesService = new google.maps.places.PlacesService(map);
-		                    placesService.getDetails(
-		                        {'reference': list[0].reference},
-		                        function detailsresult(detailsResult, placesServiceStatus) {
-		                            // Here's the first result in the AutoComplete 
-		                            console.log("We selected the first item from the list automatically because the user didn't select anything");
-		                            console.log(detailsResult);
-		                            console.log(detailsResult.photos[0].getUrl({'maxWidth': 500, 'maxHeight': 500}));
+	           
+	          	console.log("oops no data...");
+		            // User entered the name of a Place that was not suggested and
+		            // pressed the Enter key, or the Place Details request failed.
+		          
+		       		autocompleteService = new google.maps.places.AutocompleteService();
+		        	autocompleteService.getPlacePredictions(
+			        	{
+			                'input': placeName,
+			                'offset': placeName.length,
+			                'componentRestrictions': {'country':  ['us', 'ca']},
+			                'types': ['(cities)']
+			            },
+			            function listentoresult(list, status) {
+			                if(list == null || list.length == 0) {
+			                    // There are no suggestions available.
+			                    // The user saw an empty list and hit enter.
+			                    console.log("No results");
+			                } else {
+			                    console.log("we have some autocomplete results to look at");
+			                    placesService = new google.maps.places.PlacesService(map);
+			                    placesService.getDetails(
+			                        {'reference': list[0].reference},
+			                        function detailsresult(detailsResult, placesServiceStatus) {
+			                            // Here's the first result in the AutoComplete 
+			                            console.log("We selected the first item from the list automatically because the user didn't select anything");
+			                            console.log(detailsResult);
+			                            console.log(detailsResult.photos[0].getUrl({'maxWidth': 500, 'maxHeight': 500}));
 
-		                            userLocationChoice = detailsResult.name; 
+			                            userLocationChoice = detailsResult.name; 
 
-		                            getHikeDataFromApi("",detailsResult.geometry.location.lat(),detailsResult.geometry.location.lng(),30, renderHikeView);
-		                        }
-		                    );
-		                }
-		            }
-	        	);
-    		} else { 
-    			userLocationChoice = place.name;
-    			getHikeDataFromApi("",place.geometry.location.lat(),place.geometry.location.lng(),30, renderHikeView);
+			                            getHikeDataFromApi("",detailsResult.geometry.location.lat(),detailsResult.geometry.location.lng(),30, renderHikeView);
+			                        }
+			                    );
+			                }
+			            }
+		        	);
+    		
+          	} else {
 
-          console.log("auto place", place);
 
-    		}
+			  place = autocomplete.getPlace();
+         
+	          if (!place.geometry) {
+
+	          	console.log("oops no data...");
+		            // User entered the name of a Place that was not suggested and
+		            // pressed the Enter key, or the Place Details request failed.
+		          
+		       		autocompleteService = new google.maps.places.AutocompleteService();
+		        	autocompleteService.getPlacePredictions(
+			        	{
+			                'input': place.name,
+			                'offset': place.name.length,
+			                'componentRestrictions': {'country':  ['us', 'ca']},
+			                'types': ['(cities)']
+			            },
+			            function listentoresult(list, status) {
+			                if(list == null || list.length == 0) {
+			                    // There are no suggestions available.
+			                    // The user saw an empty list and hit enter.
+			                    console.log("No results");
+			                } else {
+			                    console.log("we have some autocomplete results to look at");
+			                    placesService = new google.maps.places.PlacesService(map);
+			                    placesService.getDetails(
+			                        {'reference': list[0].reference},
+			                        function detailsresult(detailsResult, placesServiceStatus) {
+			                            // Here's the first result in the AutoComplete 
+			                            console.log("We selected the first item from the list automatically because the user didn't select anything");
+			                            console.log(detailsResult);
+			                            console.log(detailsResult.photos[0].getUrl({'maxWidth': 500, 'maxHeight': 500}));
+
+			                            userLocationChoice = detailsResult.name; 
+
+			                            getHikeDataFromApi("",detailsResult.geometry.location.lat(),detailsResult.geometry.location.lng(),30, renderHikeView);
+			                        }
+			                    );
+			                }
+			            }
+		        	);
+	    		} else { 
+	    			userLocationChoice = place.name;
+	    			getHikeDataFromApi("",place.geometry.location.lat(),place.geometry.location.lng(),30, renderHikeView);
+
+	          		console.log("auto place", place);
+
+    				}
 
          
-		});
+			}
+		}
 	}
 
 //Function to get user input on first page from drop down menu
@@ -985,8 +1043,7 @@ function BreweryDataCallback(data, status){
 			google.maps.event.trigger(autocomplete, 'place_changed');
 
 			//getLocationAndCallHikesAPI(userLocationChoice);
-			
-
+			 
 		} );
 
 }
