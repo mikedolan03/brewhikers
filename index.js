@@ -898,19 +898,32 @@ function BreweryDataCallback(data, status){
               						componentRestrictions: countryRestrict
             						});
 
-		autocomplete.addListener('place_changed', function() { handleChange(); });
+		autocomplete.addListener('place_changed', function() { 
+							console.log("AutoComplete	listener");
+
+							google.maps.event.clearInstanceListeners(autocomplete);
+							//autocomplete.clearInstanceListeners(marker);
+
+			handleChange("notbutton"); });
 
 		var searchButton = document.getElementById('js-pick-loc-button');
-        searchButton.onclick = function() {
-          handleChange("button");
-        };
+       // searchButton.onclick = function() {
+       //	console.log("search button on click");
+
+        //  handleChange("button");
+       // };
 
 		function handleChange(submitType) {
+
+				console.log("in handle change", buttonClicked);
 
           console.log(autocomplete);
           
           let place;
-          if(submitType	= "button") {
+          place = autocomplete.getPlace();
+          console.log(place);
+
+          if(buttonClicked && place == undefined) {
           	
 	          let placeName = autocomplete.gm_accessors_.place.dd.predictions[0].b;
 
@@ -953,6 +966,8 @@ function BreweryDataCallback(data, status){
 		        	);
     		
           	} else {
+          		          console.log("we have some data and button click was", buttonClicked	);
+
 
 
 			  place = autocomplete.getPlace();
@@ -996,6 +1011,7 @@ function BreweryDataCallback(data, status){
 			            }
 		        	);
 	    		} else { 
+	    			console.log	("we had good data", buttonClicked);
 	    			userLocationChoice = place.name;
 	    			getHikeDataFromApi("",place.geometry.location.lat(),place.geometry.location.lng(),30, renderHikeView);
 
@@ -1033,12 +1049,13 @@ function BreweryDataCallback(data, status){
 			getHikeDataFromApi("",37.2710,-79.9414,30, renderHikeView);
 		}	
 	}
-
+let buttonClicked = false;
 	$(".js-pick-location-button").click( event => {
 			event.preventDefault();
-			//console.log('clicked');
+			console.log('clicked js-pick-location-button');
 			//userLocationChoice = $("select").val(); 
 			//console.log("location"+userLocationChoice);
+			buttonClicked = true;
 
 			google.maps.event.trigger(autocomplete, 'place_changed');
 
