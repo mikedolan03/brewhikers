@@ -410,7 +410,7 @@ getLocationFromGooglePlacesApi();
 
 			$(event.currentTarget).removeClass('js-add-brewery-button').addClass('js-remove-brewery-button').html('Remove'); 
 
-			$('.generate-trip').removeClass('hide').html(`<h2>1 hike and ${userBreweries.length} breweries selected -</h2> <button class="generate-trip-button">Generate Trip Plan</button>`);
+			$('.generate-trip').removeClass('hide').html(`<button class="generate-trip-button">1 hike and ${userBreweries.length} breweries selected - Generate Trip Plan</button>`);
 
 			
 		});
