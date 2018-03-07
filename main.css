@@ -112,6 +112,7 @@ button {
   background-color: transparent;
   color: #7e8925;
   padding: 0;
+  margin-top: 5px;
 }
 
 .banner-button {
@@ -179,6 +180,9 @@ width: 66%;
 margin: 0;
 }
 
+.brew-card {
+  height: 340px;  
+}
 
 .top-banner {
   background-color:black;
@@ -329,6 +333,10 @@ padding-top: 3px;
 .highlight
 {
   background-color: lightgrey;
+}
+
+.add-some-padding {
+  padding-bottom: 50px; 
 }
 
 .progress-row {

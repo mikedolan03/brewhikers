@@ -1,6 +1,7 @@
 function main(){
 
 
+
 let userLocationChoice = "Charlottesville";
 let userLat = 0;
 let userLong =0;
@@ -11,6 +12,7 @@ let editMenuShowing = false;
 let userLoc;
 const breweryDetails = [];
 let showAmount = 6;
+let autocomplete;
 
 //hikes the user has selected - currently just one is allowed but could branch to more hikes as a feature
 const userHikes = []; 
@@ -28,6 +30,9 @@ let currentBrewery = 0;
 if (!browserSupportsCSSProperty('animation')) {
   $('.sk-circle').html('<img src="https://media0.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif">');
   }
+
+
+getLocationFromGooglePlacesApi();
 
 //RENDERING FUNCTIONS---------------------
 
@@ -178,9 +183,15 @@ if (!browserSupportsCSSProperty('animation')) {
 
 
 		let listContent  = '';
+		let hikeImage	= "";
 		for(let i = 0; i < data.trails.length; i++)
 		{
-		 listContent += `<li><img class="img-hikes" src="${data.trails[i].imgSmall}" alt="${data.trails[i].name}"> 
+
+				if(!data.trails[i].imgSmall) { hikeImage = "http://badgerheadgames.com/wp-content/uploads/2018/03/forest.jpg"} else {
+					hikeImage	= data.trails[i].imgSmall;
+				}
+
+		 listContent += `<li><img class="img-hikes" src="${hikeImage}" alt="${data.trails[i].name}"> 
 								<p class="hike-name">${data.trails[i].name}</p>
 								<p class="hike-summary">${data.trails[i].summary}</p>
 								<p class="hike-info">Distance: ${data.trails[i].length}<br>Difficulty: ${data.trails[i].difficulty}<br>Rating: ${data.trails[i].stars}/5</p>
@@ -271,9 +282,17 @@ if (!browserSupportsCSSProperty('animation')) {
 
 				breweryData[i].distanceMi = findDistance(userLat, userLong, breweryData[i].geometry.location.lat(), breweryData[i].geometry.location.lng() ).distanceMi; 
 
+				let imageToShow = "";
+
+				//if(breweryData[i].photos) {
+				//	imageToShow	= breweryData[i].photos[0].getUrl({'maxWidth': 500, 'maxHeight': 500});
+				//} else {
+					imageToShow	= breweryData[i].myImage;
+				//}
+
 				if(breweryData[i].selected) { 
-					brewerylistContent += `<div class="col-4 highlight" id='${breweryData[i].place_id}'>
-										<img class="img-brew" src="${breweryData[i].myImage}" alt="${breweryData[i].name}">
+					brewerylistContent += `<div class="col-4 highlight brew-card" id='${breweryData[i].place_id}'>
+										<img class="img-brew" src="${imageToShow}" alt="${breweryData[i].name}">
 										<p class="brewery-name">${breweryData[i].name}<br />
 										Location: ${ precisionRound(breweryData[i].distanceMi, 1)} miles away<br />
 										Rating: ${breweryData[i].rating} stars<br />
@@ -281,8 +300,8 @@ if (!browserSupportsCSSProperty('animation')) {
 										</div>`;
 				
 				} else { 
-					brewerylistContent += `<div class="col-4" id='${breweryData[i].place_id}'>
-										<img class="img-brew" src="${breweryData[i].myImage}" alt="${breweryData[i].name}">
+					brewerylistContent += `<div class="col-4 brew-card" id='${breweryData[i].place_id}'>
+										<img class="img-brew" src="${imageToShow}" alt="${breweryData[i].name}">
 										<p class="brewery-name">${breweryData[i].name}<br />
 										Location: ${ precisionRound(breweryData[i].distanceMi, 1)} miles away<br />
 										Rating: ${breweryData[i].rating} stars<br />
@@ -290,7 +309,7 @@ if (!browserSupportsCSSProperty('animation')) {
 										</div>`;
 					}
 
-				
+				//console.log(detailsResult.photos[0].getUrl({'maxWidth': 500, 'maxHeight': 500}));
 				count++;
 				i++; 
 
@@ -339,8 +358,8 @@ if (!browserSupportsCSSProperty('animation')) {
 		$(".previous-button").click( event => {
 				event.preventDefault();
 				console.log('clicked', currentBrewery);
-				currentBrewery--;
-				if(currentBrewery < 0) {currentBrewery = breweryData.length - 1};
+				currentBrewery = currentBrewery-6;
+				if(currentBrewery < 0) {currentBrewery = 0};
 				renderBreweryView();
 
 		});
@@ -348,8 +367,9 @@ if (!browserSupportsCSSProperty('animation')) {
 		$(".next-button").click( event => {
 				event.preventDefault();
 				console.log('clicked');
-				currentBrewery++;
-				if((currentBrewery+7) >= breweryData.length) {
+				currentBrewery = currentBrewery	+6;
+				if((currentBrewery) >= breweryData.length) {
+				currentBrewery = currentBrewery	-6;
 				 return; 
 				} else {
 					renderBreweryView();
@@ -482,23 +502,30 @@ function BreweryDataCallback(data, status){
 			brewery.distanceMi = findDistance(userLat, userLong, brewery.geometry.location.lat(), brewery.geometry.location.lng() ).distanceMi;
 			brewery.selected = false;
 
-			let randomNum = Math.floor(Math.random() * Math.floor(4) + 1)
 
-			if(randomNum %2 == 0) { 
-				brewery.myImage = "http://badgerheadgames.com/wp-content/uploads/2018/02/beer-2370783_1920-e1519612752761-1.jpg"; 
-			} else {
-					if(randomNum %3 == 0) { 
-						brewery.myImage = "http://badgerheadgames.com/wp-content/uploads/2018/02/pexels-photo-597461.jpeg";
-					} else 
-						{
-							if(randomNum %5 == 0) { 
-								brewery.myImage = "http://badgerheadgames.com/wp-content/uploads/2018/02/yutacar-28290-unsplash.jpg";
-							} else {
-								brewery.myImage = "http://badgerheadgames.com/wp-content/uploads/2018/02/pexels-photo-681847.jpeg";
-								}
-						} 
 
-				}
+				if(brewery.photos) {
+					brewery.myImage = brewery.photos[0].getUrl({'maxWidth': 500, 'maxHeight': 500});
+				} else {
+											
+						let randomNum = Math.floor(Math.random() * Math.floor(4) + 1);
+
+						if(randomNum %2 == 0) { 
+							brewery.myImage = "http://badgerheadgames.com/wp-content/uploads/2018/02/beer-2370783_1920-e1519612752761-1.jpg"; 
+						} else {
+								if(randomNum %3 == 0) { 
+									brewery.myImage = "http://badgerheadgames.com/wp-content/uploads/2018/02/pexels-photo-597461.jpeg";
+								} else 
+									{
+										if(randomNum %5 == 0) { 
+											brewery.myImage = "http://badgerheadgames.com/wp-content/uploads/2018/02/yutacar-28290-unsplash.jpg";
+										} else {
+											brewery.myImage = "http://badgerheadgames.com/wp-content/uploads/2018/02/pexels-photo-681847.jpeg";
+											}
+									} 
+
+							}
+					}
 
 			});
 
@@ -816,7 +843,7 @@ function BreweryDataCallback(data, status){
 
 	 map = new google.maps.Map(document.getElementById('final-map'), {
 	      center: userLoc,
-	      zoom: 15
+	      zoom: 13
 	    });
 
 	  let request = {
@@ -850,6 +877,79 @@ function BreweryDataCallback(data, status){
 		
 	}
 
+	function getLocationFromGooglePlacesApi()
+	{
+
+		map = new google.maps.Map(document.getElementById('final-map'), {
+	      center: userLoc,
+	      zoom: 13
+	    });
+		 console.log("getting input");
+		let input = document.getElementById('auto-complete-location'); 
+		
+		 console.log("setting up auto", input);
+
+		 let countryRestrict = {'country':  ['us', 'ca']};
+
+		autocomplete = new google.maps.places.Autocomplete(input,
+								{
+              						types: ['(cities)'],
+              						componentRestrictions: countryRestrict
+            						});
+
+		autocomplete.addListener('place_changed', function() {
+          
+          var place = autocomplete.getPlace();
+          if (!place.geometry) {
+
+          	console.log("oops no data...");
+	            // User entered the name of a Place that was not suggested and
+	            // pressed the Enter key, or the Place Details request failed.
+	          
+	       		autocompleteService = new google.maps.places.AutocompleteService();
+	        	autocompleteService.getPlacePredictions(
+		        	{
+		                'input': place.name,
+		                'offset': place.name.length,
+		                'componentRestrictions': {'country':  ['us', 'ca']},
+		                'types': ['(cities)']
+		            },
+		            function listentoresult(list, status) {
+		                if(list == null || list.length == 0) {
+		                    // There are no suggestions available.
+		                    // The user saw an empty list and hit enter.
+		                    console.log("No results");
+		                } else {
+		                    console.log("we have some autocomplete results to look at");
+		                    placesService = new google.maps.places.PlacesService(map);
+		                    placesService.getDetails(
+		                        {'reference': list[0].reference},
+		                        function detailsresult(detailsResult, placesServiceStatus) {
+		                            // Here's the first result in the AutoComplete 
+		                            console.log("We selected the first item from the list automatically because the user didn't select anything");
+		                            console.log(detailsResult);
+		                            console.log(detailsResult.photos[0].getUrl({'maxWidth': 500, 'maxHeight': 500}));
+
+		                            userLocationChoice = detailsResult.name; 
+
+		                            getHikeDataFromApi("",detailsResult.geometry.location.lat(),detailsResult.geometry.location.lng(),30, renderHikeView);
+		                        }
+		                    );
+		                }
+		            }
+	        	);
+    		} else { 
+    			userLocationChoice = place.name;
+    			getHikeDataFromApi("",place.geometry.location.lat(),place.geometry.location.lng(),30, renderHikeView);
+
+          console.log("auto place", place);
+
+    		}
+
+         
+		});
+	}
+
 //Function to get user input on first page from drop down menu
 
 	function getLocationAndCallHikesAPI(userLocationChoice){
@@ -878,12 +978,13 @@ function BreweryDataCallback(data, status){
 
 	$(".js-pick-location-button").click( event => {
 			event.preventDefault();
-			console.log('clicked');
-			userLocationChoice = $("select").val(); 
-			console.log("location"+userLocationChoice);
+			//console.log('clicked');
+			//userLocationChoice = $("select").val(); 
+			//console.log("location"+userLocationChoice);
 
-			
-			getLocationAndCallHikesAPI(userLocationChoice);
+			google.maps.event.trigger(autocomplete, 'place_changed');
+
+			//getLocationAndCallHikesAPI(userLocationChoice);
 			
 
 		} );

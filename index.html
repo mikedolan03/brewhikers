@@ -29,12 +29,14 @@
 								<form>
 									<fieldset>
     									<legend>Choose a starting location:</legend>
-										<select name="locations" class="select-location">
+    									<input type="text" name="location" class="select-location" id="auto-complete-location" placeholder="Enter a location">
+										<!-- <select name="locations" class="select-location">
 										 	<option value="Great Falls">Great Falls</option>
 										 	<option value="Charlottesville">Charlottesville</option>
 										 	<option value="Harrisonburg">Harrisonburg</option>
 										 	<option value="Roanoke">Roanoke</option>
-										</select> <button class="choose-loc-button js-pick-location-button">Go!</button>
+										</select> -->
+										 <button class="choose-loc-button js-pick-location-button">Go!</button>
 									</fieldset>
 
 								</form>
@@ -124,7 +126,7 @@
 					<div class="row">
     					<h1 class="js-pick-breweries legend-hikes">Pick 1 or more breweries:</h1>
     				</div>
-										<div class="row" id="js-brewery-list" >
+										<div class="row add-some-padding" id="js-brewery-list" >
 											<img src="http://badgerheadgames.com/wp-content/uploads/2018/02/beer-2370783_1920-e1519612752761-1.jpg" alt="Loading Breweries"> 
 											<p class="brewery-name">Finding some breweries near your hike</p>
 											<p class="brewery-summary">Just a few seconds...</p>
