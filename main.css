@@ -38,6 +38,20 @@ header {
     transform: rotate(-7deg);
   }
 
+  .box {
+  border-style: solid;
+  border-width: 1px;
+  border-color: lightgrey;
+  border-radius: 2px;
+  margin-bottom: 20px;
+  position:   relative; 
+
+}
+
+.box p {
+padding-left:   5px;
+} 
+
   .row-full-width-background {
     background-color: green;
     color: white;
@@ -45,9 +59,19 @@ header {
     width: 100%;
   }
 
+  .hike-name {
+    font-weight:  800;
+  }
+
+  .info-bold {
+    font-weight:  700;
+  }
+
 .img-hikes {
   width: 100%;
   height: 200px;
+  margin-top: 5px;
+
   /*in-height: 186px; 
   margin-right: 10px; */
   /*width: 100px;
@@ -58,7 +82,7 @@ header {
 .img-brew {
     height: 200px;
     width: 100%;
-    margin: 5px;
+    padding: 5px;
 
 }
 
@@ -147,6 +171,14 @@ button {
 .greyed {
   background-color: #ffffff40;
   border-color: #ffffff40;
+}
+
+.check-mark {
+    position: absolute;
+    right: 1px;
+    top: 1px;
+    color: white;
+    font-size: 4em;
 }
 
 .breweries-h1 {
@@ -332,7 +364,7 @@ padding-top: 3px;
 
 .highlight
 {
-  background-color: lightgrey;
+  background-color: #ff980029;
 }
 
 .add-some-padding {
@@ -387,8 +419,12 @@ padding-top: 3px;
 }
 
 .progress-button {
-color: white;
-
+color: green;
+background-color: white;
+border-style: solid;
+border-radius: 10px;
+width: 50%;
+box-shadow: 2px 2px #045f04;
 }
 
 .trip-plan {
@@ -548,10 +584,11 @@ padding: 20px;
 .logo {
     font-family: 'Pacifico', cursive;
     font-size: 3em; 
-    float: left;
-    left: 0px;
-    padding-left: 10px;
-    padding-top: 10px;
+    position: absolute;
+    left: 50px;
+    top: 20px;
+    padding: 0px;
+    margin: 0px;
     -ms-transform: rotate(-7deg); /* IE 9 */
     -webkit-transform: rotate(-7deg); /* Safari 3-8 */
     transform: rotate(-7deg);
@@ -566,11 +603,18 @@ padding: 20px;
   height: 500px;
 }
 
-
+.img-plan-page {
+   height: 300px;
+    width: 100%;
+    margin-left:  auto; 
+    margin-right:   auto;
+}
 
 .img-hikes {
   max-width: 250px;
   height: auto;
+  min-height: 160px;
+  margin-right: 15px;
 }
 
 .featured-hike {
@@ -578,9 +622,12 @@ padding: 20px;
   }
 
 .legend-hikes {
-  font-size: 2em;
-  font-weight:  600;
- text-shadow: 0px 0px black;
+    font-size: 1.5em;
+    font-weight: 600;
+    text-shadow: 0px 0px black;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    padding: 0px;
 }
 
   li img {

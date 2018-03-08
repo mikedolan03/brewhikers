@@ -196,10 +196,28 @@ if (!browserSupportsCSSProperty('animation')) {
 					hikeImage	= data.trails[i].imgSmall;
 				}
 
+		let hikeDifficulty = data.trails[i].difficulty;
+
+		if(data.trails[i].difficulty == "green" ) {hikeDifficulty = "Easy";}
+		if(data.trails[i].difficulty == "greenBlue" ) {hikeDifficulty = "Easy to Moderate";}
+		if(data.trails[i].difficulty == "blue" ) {hikeDifficulty = "Moderate";}
+		if(data.trails[i].difficulty == "blueBlack" ) {hikeDifficulty = "Moderate to Difficult";}
+		if(data.trails[i].difficulty == "black" ) {hikeDifficulty = "Difficult";}
+
+
+
+
+
+
+
 		 listContent += `<li><img class="img-hikes" src="${hikeImage}" alt="${data.trails[i].name}"> 
 								<p class="hike-name">${data.trails[i].name}</p>
 								<p class="hike-summary">${data.trails[i].summary}</p>
-								<p class="hike-info">Distance: ${data.trails[i].length}<br>Difficulty: ${data.trails[i].difficulty}<br>Rating: ${data.trails[i].stars}/5</p>
+								<p class="hike-info">
+								<span class="info-bold">Distance:</span> ${data.trails[i].length}<br>
+								<span class="info-bold">Difficulty:</span> ${hikeDifficulty}
+								<br>
+								<span class="info-bold">Rating:</span> ${data.trails[i].stars}/5</p>
 								<button class="js-select-hike-button small-right" data="${i}">Select</button>
 								</li>`;
 		}
@@ -297,20 +315,26 @@ if (!browserSupportsCSSProperty('animation')) {
 
 				if(breweryData[i].selected) { 
 					brewerylistContent += `<div class="col-4 highlight brew-card" id='${breweryData[i].place_id}'>
+										<div class="box">
+										<div class="check-mark"><i class="far fa-check-circle"></i></div>
 										<img class="img-brew" src="${imageToShow}" alt="${breweryData[i].name}">
 										<p class="brewery-name">${breweryData[i].name}<br />
 										Location: ${ precisionRound(breweryData[i].distanceMi, 1)} miles away<br />
 										Rating: ${breweryData[i].rating} stars<br />
 										<button name="brewery" id="brewery${breweryData[i].place_id}" data="${i}" class="js-remove-brewery-button">Remove</button>
+										</div>
 										</div>`;
 				
 				} else { 
 					brewerylistContent += `<div class="col-4 brew-card" id='${breweryData[i].place_id}'>
+											<div class="box">
+											<div class="check-mark hide"><i class="far fa-check-circle"></i></div>
 										<img class="img-brew" src="${imageToShow}" alt="${breweryData[i].name}">
 										<p class="brewery-name">${breweryData[i].name}<br />
 										Location: ${ precisionRound(breweryData[i].distanceMi, 1)} miles away<br />
 										Rating: ${breweryData[i].rating} stars<br />
 										<button name="brewery" id="brewery${breweryData[i].place_id}" data="${i}" class="js-add-brewery-button"> Add to list</button>
+										</div>
 										</div>`;
 					}
 
@@ -393,6 +417,7 @@ if (!browserSupportsCSSProperty('animation')) {
 			console.log('clicked', userBreweries);
 
 			$(event.currentTarget).parent().parent().addClass("highlight");
+			$(event.currentTarget).parent().parent().find(".check-mark").removeClass("hide");
 
 			let step3text = "";
 
@@ -747,7 +772,7 @@ function BreweryDataCallback(data, status){
 
         let mapItineraryContent = "";
 
-        mapItineraryContent += `<li class="hike-card"><img class="img-brew" src="${hikeData.trails[userHikes[0]].imgSmall}" alt="${hikeData.trails[userHikes[0]].name}"> 
+        mapItineraryContent += `<li class="hike-card"><img class="img-plan-page" src="${hikeData.trails[userHikes[0]].imgSmall}" alt="${hikeData.trails[userHikes[0]].name}"> 
 								<p class="hike-name">${hikeData.trails[userHikes[0]].name}</p>
 								<p class="hike-summary">${hikeData.trails[userHikes[0]].summary}</p>
 								<p class="hike-info">Distance: ${hikeData.trails[userHikes[0]].length}<br>Difficulty: ${hikeData.trails[userHikes[0]].difficulty}<br>Rating: ${hikeData.trails[userHikes[0]].stars}/5</p>
@@ -783,7 +808,7 @@ function BreweryDataCallback(data, status){
 
 
 			mapItineraryContent += `<li id='${i}' class="brewery-card">
-										<img class="img-brew" src="${myBreweryData[i].myImage}" alt="${myBreweryData[i].name}">
+										<img class="img-plan-page" src="${myBreweryData[i].myImage}" alt="${myBreweryData[i].name}">
 										<p class="brewery-name">${myBreweryData[i].name}</p>
 										<p class="brewery-summary">${myBreweryData[i].vicinity}</p>
 										<p class="brewery-summary">${myBreweryData[i].rating}</p>
