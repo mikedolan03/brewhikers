@@ -265,14 +265,14 @@ if (!browserSupportsCSSProperty('animation')) {
 
 
 //Function to render the list of breweries
-	function renderBreweryView(){
+	function renderBreweryView(scroll = true){
 		//make sure to disable old event handlers since they will be regenerated
 		$('#js-brewery-list').off("click");
 		$('.js-green-go-button').off("click");
-
-		document.body.scrollTop = 0;
-    	document.documentElement.scrollTop = 0;
-
+			if(scroll){
+					document.body.scrollTop = 0;
+			    	document.documentElement.scrollTop = 0;
+			}
 		let brewerylistContent = '';
 
 		let breweryCount = breweryData.length;
@@ -397,7 +397,7 @@ if (!browserSupportsCSSProperty('animation')) {
 				event.preventDefault();
 				console.log('clicked');
 				showAmount = showAmount + 6; 
-				renderBreweryView();
+				renderBreweryView(false);
 
 		});
 
@@ -493,6 +493,8 @@ if (!browserSupportsCSSProperty('animation')) {
 				}  else {
 					step3text += " brewery to visit";
 				}
+
+				$('.trip-summary').html(`1 hike and ${userBreweries.length} breweries selected`);
 
 			}	else {
 					step3text = "Step 3: Choose breweries to visit...";

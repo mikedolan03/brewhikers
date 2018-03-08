@@ -583,7 +583,7 @@ margin-top: 5px;
     padding: 20px;
     border: 1px solid #888;
     border-radius: 20px;
-    width: 300px;
+    width: 200px;
     height: 300px;
  }
  /* 
@@ -628,6 +628,16 @@ margin-top: 5px;
 
   }
 
+.modal-content {
+  text-align: center;
+    background-color: white;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 20px;
+    width: 300px;
+    height: 300px;
+ }
 
 .trip-summary {
 font-size: 1em;
