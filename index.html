@@ -29,13 +29,17 @@
 								<form role="form" action="" method="post" >
 									<fieldset>
     									<legend>Choose a starting location:</legend>
-    									<input type="text" name="location" class="select-location" id="auto-complete-location" placeholder="Enter a location">
-										<!-- <select name="locations" class="select-location">
+    									<!--<input type="text" name="location" class="select-location" id="auto-complete-location" placeholder="Enter a location">
+    									<div class="ui-widget">
+										  <label for="city-tags">Tags: </label>
+										  <input id="city-tags">
+										</div>-->
+										<select name="locations" class="select-location">
 										 	<option value="Great Falls">Great Falls</option>
 										 	<option value="Charlottesville">Charlottesville</option>
 										 	<option value="Harrisonburg">Harrisonburg</option>
 										 	<option value="Roanoke">Roanoke</option>
-										</select> -->
+										</select>
 										 <button type="submit" class="choose-loc-button js-pick-location-button" id="js-pick-loc-button">Go!</button>
 									</fieldset>
 
@@ -190,11 +194,16 @@
 		</section>
 	</div>
 		</main>
+		<!--https://simplemaps.com/data/us-cities.-->
+
+
 	<!---Script needed to set up Google Maps/Places API-->	
 	
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQYbpeVxvc5FeK2hbOUjCOv9J8coUz180&libraries=places"></script>
 
 	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script src="citydatawithnames.js"></script>
 	<script src="apicalls.js"></script>
 	<script src="index.js"></script>
 

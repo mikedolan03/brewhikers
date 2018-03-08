@@ -31,8 +31,11 @@ if (!browserSupportsCSSProperty('animation')) {
   $('.sk-circle').html('<img src="https://media0.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif">');
   }
 
+//$( "#city-tags" ).autocomplete({
+   //   source: cityLookUp
+    //});
 
-getLocationFromGooglePlacesApi();
+//getLocationFromGooglePlacesApi();
 
 //RENDERING FUNCTIONS---------------------
 
@@ -1053,13 +1056,13 @@ let buttonClicked = false;
 	$(".js-pick-location-button").click( event => {
 			event.preventDefault();
 			console.log('clicked js-pick-location-button');
-			//userLocationChoice = $("select").val(); 
-			//console.log("location"+userLocationChoice);
-			buttonClicked = true;
+			userLocationChoice = $("select").val(); 
+			console.log("location"+userLocationChoice);
+			//buttonClicked = true;
 
-			google.maps.event.trigger(autocomplete, 'place_changed');
+			//google.maps.event.trigger(autocomplete, 'place_changed');
 
-			//getLocationAndCallHikesAPI(userLocationChoice);
+			getLocationAndCallHikesAPI(userLocationChoice);
 			 
 		} );
 
