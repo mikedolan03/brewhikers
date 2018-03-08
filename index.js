@@ -31,8 +31,11 @@ if (!browserSupportsCSSProperty('animation')) {
   $('.sk-circle').html('<img src="https://media0.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif">');
   }
 
+//$( "#city-tags" ).autocomplete({
+   //   source: cityLookUp
+    //});
 
-getLocationFromGooglePlacesApi();
+//getLocationFromGooglePlacesApi();
 
 //RENDERING FUNCTIONS---------------------
 
@@ -81,12 +84,14 @@ getLocationFromGooglePlacesApi();
 
 
 			progressContent += `<div class="col-12 right-side js-open-edit"><i class="far fa-edit"></i></div>
-							<div class="col-4 progress-box progress-box-left hide-on-mobile"><p class="js-step1-txt">Step 1: Exploring ${userLocationChoice}</p>
+							<div class="col-3 progress-box progress-box-left hide-on-mobile"><p class="js-step1-txt">Step 1: Exploring ${userLocationChoice}</p>
 							<button class="progress-button js-go-back-to-start-button">Change Area</button></div>
-							<div class="col-4 progress-box hide-on-mobile"><p class="js-step2-txt">Step 2: Hiking ${hikeData.trails[userHikes[0]].name}</p>
+							<div class="col-3 progress-box hide-on-mobile"><p class="js-step2-txt">Step 2: Hiking ${hikeData.trails[userHikes[0]].name}</p>
 							<button class="progress-button js-go-back-to-hike-button">Change Hike</button></div>
-							<div class="col-4 progress-box progress-box-right"><p class="js-step3-txt">${step3text}</p>
-							<button class="progress-button js-go-to-breweries-button">Change Breweries</button></div>`;
+							<div class="col-3 progress-box progress-box-right"><p class="js-step3-txt">${step3text}</p>
+							<button class="progress-button js-go-to-breweries-button">Change Breweries</button></div>
+							<div class="col-3 progress-box progress-box-right"><p class="js-step3-txt">Results: Plan Details</p>
+							</div>`;
 						}
 
 		$('.js-progress-section').html(progressContent);
@@ -410,8 +415,9 @@ getLocationFromGooglePlacesApi();
 
 			$(event.currentTarget).removeClass('js-add-brewery-button').addClass('js-remove-brewery-button').html('Remove'); 
 
-			$('.generate-trip').removeClass('hide').html(`<button class="generate-trip-button">1 hike and ${userBreweries.length} breweries selected - Generate Trip Plan</button>`);
-
+			$('.generate-trip').removeClass('hide'); // .html(`<button class="generate-trip-button">Generate Trip</button>`);
+			$('.generate-trip-button').html(`Generate Trip`);
+			$('.trip-summary').html(`1 hike and ${userBreweries.length} breweries selected`);
 			
 		});
 
@@ -741,7 +747,7 @@ function BreweryDataCallback(data, status){
 
         let mapItineraryContent = "";
 
-        mapItineraryContent += `<li><img class="img-brew" src="${hikeData.trails[userHikes[0]].imgSmall}" alt="${hikeData.trails[userHikes[0]].name}"> 
+        mapItineraryContent += `<li class="hike-card"><img class="img-brew" src="${hikeData.trails[userHikes[0]].imgSmall}" alt="${hikeData.trails[userHikes[0]].name}"> 
 								<p class="hike-name">${hikeData.trails[userHikes[0]].name}</p>
 								<p class="hike-summary">${hikeData.trails[userHikes[0]].summary}</p>
 								<p class="hike-info">Distance: ${hikeData.trails[userHikes[0]].length}<br>Difficulty: ${hikeData.trails[userHikes[0]].difficulty}<br>Rating: ${hikeData.trails[userHikes[0]].stars}/5</p>
@@ -776,7 +782,7 @@ function BreweryDataCallback(data, status){
 
 
 
-			mapItineraryContent += `<li id='${i}'>
+			mapItineraryContent += `<li id='${i}' class="brewery-card">
 										<img class="img-brew" src="${myBreweryData[i].myImage}" alt="${myBreweryData[i].name}">
 										<p class="brewery-name">${myBreweryData[i].name}</p>
 										<p class="brewery-summary">${myBreweryData[i].vicinity}</p>
@@ -1053,13 +1059,13 @@ let buttonClicked = false;
 	$(".js-pick-location-button").click( event => {
 			event.preventDefault();
 			console.log('clicked js-pick-location-button');
-			//userLocationChoice = $("select").val(); 
-			//console.log("location"+userLocationChoice);
-			buttonClicked = true;
+			userLocationChoice = $("select").val(); 
+			console.log("location"+userLocationChoice);
+			//buttonClicked = true;
 
-			google.maps.event.trigger(autocomplete, 'place_changed');
+			//google.maps.event.trigger(autocomplete, 'place_changed');
 
-			//getLocationAndCallHikesAPI(userLocationChoice);
+			getLocationAndCallHikesAPI(userLocationChoice);
 			 
 		} );
 
