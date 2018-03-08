@@ -13,7 +13,8 @@ let userLoc;
 const breweryDetails = [];
 let showAmount = 6;
 let autocomplete;
-
+let directionShowing = false;
+let directionsGenerated = false;
 //hikes the user has selected - currently just one is allowed but could branch to more hikes as a feature
 const userHikes = []; 
 
@@ -88,9 +89,10 @@ if (!browserSupportsCSSProperty('animation')) {
 							<button class="progress-button js-go-back-to-start-button">Change Area</button></div>
 							<div class="col-3 progress-box hide-on-mobile"><p class="js-step2-txt">Step 2: Hiking ${hikeData.trails[userHikes[0]].name}</p>
 							<button class="progress-button js-go-back-to-hike-button">Change Hike</button></div>
-							<div class="col-3 progress-box progress-box-right"><p class="js-step3-txt">${step3text}</p>
+							<div class="col-3 progress-box hide-on-mobile progress-box-right"><p class="js-step3-txt">${step3text}</p>
 							<button class="progress-button js-go-to-breweries-button">Change Breweries</button></div>
 							<div class="col-3 progress-box progress-box-right"><p class="js-step3-txt">Results: Plan Details</p>
+							<button class="progress-button js-go-back-to-start-button">Start Over</button>
 							</div>`;
 						}
 
@@ -139,7 +141,8 @@ if (!browserSupportsCSSProperty('animation')) {
 			//remove event handlers from brewery buttons for when we get to this page again 
 			$('#js-brewery-list').off("click");
 
-
+			$('#show-map').addClass('hide');
+			$('.generate-trip').addClass('hide');
 			$('.js-brewery-view').addClass('hide');
 
 			getLocationAndCallHikesAPI(userLocationChoice);
@@ -152,6 +155,7 @@ if (!browserSupportsCSSProperty('animation')) {
 			event.preventDefault();
 			console.log('clicked');
 			
+			$('#show-map').addClass('hide');
 
 			$('.modal-text').html(`Finding the closest breweries...`);
 			$('.modal').removeClass('hide');
@@ -196,10 +200,28 @@ if (!browserSupportsCSSProperty('animation')) {
 					hikeImage	= data.trails[i].imgSmall;
 				}
 
+		let hikeDifficulty = data.trails[i].difficulty;
+
+		if(data.trails[i].difficulty == "green" ) {hikeDifficulty = "Easy";}
+		if(data.trails[i].difficulty == "greenBlue" ) {hikeDifficulty = "Easy to Moderate";}
+		if(data.trails[i].difficulty == "blue" ) {hikeDifficulty = "Moderate";}
+		if(data.trails[i].difficulty == "blueBlack" ) {hikeDifficulty = "Moderate to Difficult";}
+		if(data.trails[i].difficulty == "black" ) {hikeDifficulty = "Difficult";}
+
+
+
+
+
+
+
 		 listContent += `<li><img class="img-hikes" src="${hikeImage}" alt="${data.trails[i].name}"> 
 								<p class="hike-name">${data.trails[i].name}</p>
 								<p class="hike-summary">${data.trails[i].summary}</p>
-								<p class="hike-info">Distance: ${data.trails[i].length}<br>Difficulty: ${data.trails[i].difficulty}<br>Rating: ${data.trails[i].stars}/5</p>
+								<p class="hike-info">
+								<span class="info-bold">Distance:</span> ${data.trails[i].length}<br>
+								<span class="info-bold">Difficulty:</span> ${hikeDifficulty}
+								<br>
+								<span class="info-bold">Rating:</span> ${data.trails[i].stars}/5</p>
 								<button class="js-select-hike-button small-right" data="${i}">Select</button>
 								</li>`;
 		}
@@ -243,14 +265,14 @@ if (!browserSupportsCSSProperty('animation')) {
 
 
 //Function to render the list of breweries
-	function renderBreweryView(){
+	function renderBreweryView(scroll = true){
 		//make sure to disable old event handlers since they will be regenerated
 		$('#js-brewery-list').off("click");
 		$('.js-green-go-button').off("click");
-
-		document.body.scrollTop = 0;
-    	document.documentElement.scrollTop = 0;
-
+			if(scroll){
+					document.body.scrollTop = 0;
+			    	document.documentElement.scrollTop = 0;
+			}
 		let brewerylistContent = '';
 
 		let breweryCount = breweryData.length;
@@ -274,11 +296,7 @@ if (!browserSupportsCSSProperty('animation')) {
 				ii = breweryData.length;
 				}
 
-			brewerylistContent = `<div class="col-4 hide-on-mobile"><button class="previous-button"><< Previous Brewery</button></div>
-			<div class="col-4 hide-on-mobile">Showing results ${i+1} to ${ii} </div>
-			<div class="col-4 hide-on-mobile"><button class="next-button">Next Brewery >></button></div>`
-
-
+			
 			while (count < showAmount)
 			{
 
@@ -296,22 +314,28 @@ if (!browserSupportsCSSProperty('animation')) {
 				//}
 
 				if(breweryData[i].selected) { 
-					brewerylistContent += `<div class="col-4 highlight brew-card" id='${breweryData[i].place_id}'>
-										<img class="img-brew" src="${imageToShow}" alt="${breweryData[i].name}">
-										<p class="brewery-name">${breweryData[i].name}<br />
-										Location: ${ precisionRound(breweryData[i].distanceMi, 1)} miles away<br />
-										Rating: ${breweryData[i].rating} stars<br />
-										<button name="brewery" id="brewery${breweryData[i].place_id}" data="${i}" class="js-remove-brewery-button">Remove</button>
-										</div>`;
+					brewerylistContent += `<div class="col-4 brew-card" id='${breweryData[i].place_id}'>
+												<div class="box highlight">
+														<div class="check-mark"><i class="far fa-check-circle"></i></div>
+														<img class="img-brew" src="${imageToShow}" alt="${breweryData[i].name}">
+														<p class="brewery-name"><span class="info-bold">${breweryData[i].name}</span><br />
+														<span class="info-bold">Location:</span> ${ precisionRound(breweryData[i].distanceMi, 1)} miles away<br />
+														<span class="info-bold">Rating:</span> ${breweryData[i].rating} stars</p>
+														<button name="brewery" id="brewery${breweryData[i].place_id}" data="${i}" class="js-remove-brewery-button brew-button">Remove</button>
+												</div>
+											</div>`;
 				
 				} else { 
 					brewerylistContent += `<div class="col-4 brew-card" id='${breweryData[i].place_id}'>
-										<img class="img-brew" src="${imageToShow}" alt="${breweryData[i].name}">
-										<p class="brewery-name">${breweryData[i].name}<br />
-										Location: ${ precisionRound(breweryData[i].distanceMi, 1)} miles away<br />
-										Rating: ${breweryData[i].rating} stars<br />
-										<button name="brewery" id="brewery${breweryData[i].place_id}" data="${i}" class="js-add-brewery-button"> Add to list</button>
-										</div>`;
+													<div class="box">
+														<div class="check-mark hide"><i class="far fa-check-circle"></i></div>
+														<img class="img-brew" src="${imageToShow}" alt="${breweryData[i].name}">
+														<p class="brewery-name"><span class="info-bold">${breweryData[i].name}</span><br />
+														<span class="info-bold">Location:</span> ${ precisionRound(breweryData[i].distanceMi, 1)} miles away<br />
+														<span class="info-bold">Rating:</span> ${breweryData[i].rating} stars</p>
+														<button name="brewery" id="brewery${breweryData[i].place_id}" data="${i}" class="js-add-brewery-button brew-button"> Add to list</button>
+													</div>
+											</div>`;
 					}
 
 				//console.log(detailsResult.photos[0].getUrl({'maxWidth': 500, 'maxHeight': 500}));
@@ -321,6 +345,17 @@ if (!browserSupportsCSSProperty('animation')) {
 				if(i >= breweryData.length) count = 1000;
 
 			}
+
+			brewerylistContent += `</div>
+									<div class="row" style="clear: both"><div class="col-4 hide-on-mobile">
+											<button class="previous-button"><< Previous Brewery</button></div>
+											<div class="col-4 hide-on-mobile">
+													<div class="showing-results">
+															<div class="show-results-inner">Showing results ${currentBrewery+1} to ${ii}
+															</div>
+													</div>
+											</div>
+											<div class="col-4 hide-on-mobile"><button class="next-button">Next Brewery >></button></div>`
 
 			if(showAmount < breweryData.length) {
 				brewerylistContent += `<div class="col-12 hide-on-big">
@@ -345,6 +380,12 @@ if (!browserSupportsCSSProperty('animation')) {
 
 		renderProgressSection(3);
 
+		if(userBreweries.length > 0) {
+			$('.generate-trip').removeClass('hide'); 
+			$('.generate-trip-button').html(`Generate Trip`);
+			$('.trip-summary').html(`1 hike and ${userBreweries.length} breweries selected`);
+		}
+
 		//reset to default value just in case we enlarged the search
 		radiusAmount = 10000; 
 
@@ -356,7 +397,7 @@ if (!browserSupportsCSSProperty('animation')) {
 				event.preventDefault();
 				console.log('clicked');
 				showAmount = showAmount + 6; 
-				renderBreweryView();
+				renderBreweryView(false);
 
 		});
 
@@ -392,7 +433,8 @@ if (!browserSupportsCSSProperty('animation')) {
 
 			console.log('clicked', userBreweries);
 
-			$(event.currentTarget).parent().parent().addClass("highlight");
+			$(event.currentTarget).parent().parent().find('.box').addClass("highlight");
+			$(event.currentTarget).parent().parent().find('.check-mark').removeClass("hide");
 
 			let step3text = "";
 
@@ -415,7 +457,7 @@ if (!browserSupportsCSSProperty('animation')) {
 
 			$(event.currentTarget).removeClass('js-add-brewery-button').addClass('js-remove-brewery-button').html('Remove'); 
 
-			$('.generate-trip').removeClass('hide'); // .html(`<button class="generate-trip-button">Generate Trip</button>`);
+			$('.generate-trip').removeClass('hide'); 
 			$('.generate-trip-button').html(`Generate Trip`);
 			$('.trip-summary').html(`1 hike and ${userBreweries.length} breweries selected`);
 			
@@ -438,7 +480,8 @@ if (!browserSupportsCSSProperty('animation')) {
 
       		breweryData[parseInt($(event.currentTarget).attr("data"))].selected = false;
 
-      		$(event.currentTarget).parent().parent().removeClass("highlight");
+      		$(event.currentTarget).parent().parent().find('.box').removeClass("highlight");
+      		$(event.currentTarget).parent().parent().find('.check-mark').addClass("hide");
 
 			let step3text = "";
 			if(userBreweries.length > 0){
@@ -450,6 +493,8 @@ if (!browserSupportsCSSProperty('animation')) {
 				}  else {
 					step3text += " brewery to visit";
 				}
+
+				$('.trip-summary').html(`1 hike and ${userBreweries.length} breweries selected`);
 
 			}	else {
 					step3text = "Step 3: Choose breweries to visit...";
@@ -729,9 +774,8 @@ function BreweryDataCallback(data, status){
         	});
 
 	        let directionsService = new google.maps.DirectionsService;
-        	let directionsDisplay = new google.maps.DirectionsRenderer({
-      										suppressMarkers: true
-  										});
+        	let directionsDisplay = new google.maps.DirectionsRenderer();
+        	//{suppressMarkers: true});
  
   
 
@@ -747,10 +791,12 @@ function BreweryDataCallback(data, status){
 
         let mapItineraryContent = "";
 
-        mapItineraryContent += `<li class="hike-card"><img class="img-brew" src="${hikeData.trails[userHikes[0]].imgSmall}" alt="${hikeData.trails[userHikes[0]].name}"> 
-								<p class="hike-name">${hikeData.trails[userHikes[0]].name}</p>
+        mapItineraryContent += `<li class="hike-card"><img class="img-plan-page" src="${hikeData.trails[userHikes[0]].imgSmall}" alt="${hikeData.trails[userHikes[0]].name}"> 
+								<p class="hike-name"><span class="info-bold">${hikeData.trails[userHikes[0]].name}</span></p>
 								<p class="hike-summary">${hikeData.trails[userHikes[0]].summary}</p>
-								<p class="hike-info">Distance: ${hikeData.trails[userHikes[0]].length}<br>Difficulty: ${hikeData.trails[userHikes[0]].difficulty}<br>Rating: ${hikeData.trails[userHikes[0]].stars}/5</p>
+								<p class="hike-info"><span class="info-bold">Distance:</span> ${hikeData.trails[userHikes[0]].length}<br>
+								<span class="info-bold">Difficulty:</span> ${hikeData.trails[userHikes[0]].difficulty}<br>
+								<span class="info-bold">Rating:</span> ${hikeData.trails[userHikes[0]].stars}/5</p>
 								</li>`;
 
         for (let i = 0; i < myBreweryData.length; i++)
@@ -783,10 +829,10 @@ function BreweryDataCallback(data, status){
 
 
 			mapItineraryContent += `<li id='${i}' class="brewery-card">
-										<img class="img-brew" src="${myBreweryData[i].myImage}" alt="${myBreweryData[i].name}">
-										<p class="brewery-name">${myBreweryData[i].name}</p>
-										<p class="brewery-summary">${myBreweryData[i].vicinity}</p>
-										<p class="brewery-summary">${myBreweryData[i].rating}</p>
+										<img class="img-plan-page" src="${myBreweryData[i].myImage}" alt="${myBreweryData[i].name}">
+										<p class="brewery-name"><span class="info-bold">${myBreweryData[i].name}</span></p>
+										<p class="brewery-summary"><span class="info-bold">Address:</span> ${myBreweryData[i].vicinity}</p>
+										<p class="brewery-summary"><span class="info-bold">Rating:</span> ${myBreweryData[i].rating}</p>
 										</li>`;
 
 			
@@ -800,7 +846,20 @@ function BreweryDataCallback(data, status){
 
 		$('.js-directions-button').click(event => {
 			event.preventDefault();
-			calculateAndDisplayRoute(directionsService, directionsDisplay, waypts, myBreweryData);
+			if(!directionShowing){
+				directionShowing = true;
+
+				$('#directions-panel').removeClass('hide');
+
+				if(!directionsGenerated){
+					calculateAndDisplayRoute(directionsService, directionsDisplay, waypts, myBreweryData);
+				}
+					$('.js-directions-button').html('Hide Directions');
+				} else {
+					$('#directions-panel').addClass('hide');
+					$('.js-directions-button').html('Show Directions');
+					directionShowing = false;
+				}
 		});
 
     }
@@ -821,6 +880,7 @@ function BreweryDataCallback(data, status){
         }, function(response, status) {
           if (status === 'OK') {
             directionsDisplay.setDirections(response);
+            directionsGenerated = true;
           } else {
             window.alert('Directions request failed due to ' + status);
           }
