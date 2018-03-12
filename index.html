@@ -28,7 +28,7 @@
 								<div class="form-styles">
 								<form role="form">
 									<fieldset>
-    									<legend>Choose a starting location:</legend>
+    									<legend class="help-text">Type in a starting location:</legend>
     										<!--<input type="text" name="location" class="select-location" id="auto-complete-location" placeholder="Enter a location">
     									<div class="ui-widget">
 										  <label for="city-tags">Tags: </label>
@@ -36,7 +36,7 @@
 										</div>-->
 										<div class="align-container">
 										<div class="align-this">	
-										<input type="text" name="search" class="search" id="search" placeholder="Enter a town, city, or park name...">
+										<input type="text" name="search" class="search" id="search" placeholder="Example: Boston">
 										<!--<select name="locations" class="select-location">
 										 	<option value="Great Falls">Great Falls</option>
 										 	<option value="Charlottesville">Charlottesville</option>
@@ -47,6 +47,7 @@
 										<div class="align-this">
 										 <button type="submit" class="choose-loc-button js-pick-location-button" id="js-pick-loc-button">Go!</button></div>
 										</div>
+										<p class="error-messsage">We couldn't find anything with your search term. Please enter a location like a town, city or a park to search for hikes.</p>
 									</fieldset>
 
 								</form>
@@ -177,7 +178,7 @@
 		</section>
 		<section class="js-green-go-button">
 			<div class="generate-trip hide">
-				<div class="col-6 trip-summary"></div><div class="col-6"><button class="generate-trip-button">Generate Trip Plan</button></div>
+				<div class="col-6m trip-summary"></div><div class="col-6m"><button class="generate-trip-button">Generate Trip Plan</button></div>
 			</div>
 		</section>
 		<section>
