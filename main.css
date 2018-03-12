@@ -294,7 +294,7 @@ margin: 0;
 
 .help-text {
   font-weight:  700;
-    color: peachpuff;
+    
 }
 
 
@@ -311,7 +311,7 @@ margin: 0;
 
 .error-messsage {
 font-size:  .8em;
-
+color: peachpuff;
 }
 
 .form-styles {
