@@ -277,6 +277,17 @@ margin: 0;
   
 }
 
+.search {
+  text-align: center;
+  width: 95%; 
+  height: 80px;
+  font-weight: 700;
+  border-radius: 10px;
+  color: black;
+  font-size: 16px;
+  padding: 20px 0 20px 10px;
+}
+
 .form-styles {
 }
 

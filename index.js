@@ -196,9 +196,12 @@ if (!browserSupportsCSSProperty('animation')) {
 		for(let i = 0; i < data.trails.length; i++)
 		{
 
-				if(!data.trails[i].imgSmall) { hikeImage = "http://badgerheadgames.com/wp-content/uploads/2018/03/forest.jpg"} else {
-					hikeImage	= data.trails[i].imgSmall;
+				if(!data.trails[i].imgMedium) { hikeImage = "http://badgerheadgames.com/wp-content/uploads/2018/03/forest.jpg"} else {
+					hikeImage	= data.trails[i].imgMedium;
+
 				}
+
+				hikeData.trails[i].hikeImage = hikeImage;
 
 		let hikeDifficulty = data.trails[i].difficulty;
 
@@ -534,10 +537,15 @@ function BreweryDataCallback(data, status){
 			radiusAmount += 8000;
 
 			if(radiusAmount >=60000) {
-				console.log("no breweries nearby");
-				breweryData = data;
-				renderBreweryView();
-				return;
+				if(data.length	<=0){
+						console.log("no breweries nearby");
+						breweryData = data;
+						renderBreweryView();
+						return;
+					} else {
+						console.log("few locations nearby");
+
+						}
 			} else {
 
 				getBreweryDataFromGoogleApi( radiusAmount, BreweryDataCallback);
@@ -549,8 +557,19 @@ function BreweryDataCallback(data, status){
 
 		breweryData = data;
 
+		breweryData = breweryData.filter(b => {
+			if( b.name.indexOf('Brewery') >= 0 || b.name.indexOf('Beer')  >= 0 || b.name.indexOf('Brewing')  >= 0 || b.name.indexOf('Beerworks')  >= 0) { 
+				return true; 
+					} else {
+						return false;
+					}
+		});
+
+		console.log("cleaned list ",breweryData.length);
+
 		//get and add distance data
 		breweryData.forEach(brewery => {
+
 			brewery.distanceMi = findDistance(userLat, userLong, brewery.geometry.location.lat(), brewery.geometry.location.lng() ).distanceMi;
 			brewery.selected = false;
 
@@ -791,7 +810,7 @@ function BreweryDataCallback(data, status){
 
         let mapItineraryContent = "";
 
-        mapItineraryContent += `<li class="hike-card"><img class="img-plan-page" src="${hikeData.trails[userHikes[0]].imgSmall}" alt="${hikeData.trails[userHikes[0]].name}"> 
+        mapItineraryContent += `<li class="hike-card"><img class="img-plan-page" src="${hikeData.trails[userHikes[0]].hikeImage}" alt="${hikeData.trails[userHikes[0]].name}"> 
 								<p class="hike-name"><span class="info-bold">${hikeData.trails[userHikes[0]].name}</span></p>
 								<p class="hike-summary">${hikeData.trails[userHikes[0]].summary}</p>
 								<p class="hike-info"><span class="info-bold">Distance:</span> ${hikeData.trails[userHikes[0]].length}<br>
@@ -1092,34 +1111,91 @@ function BreweryDataCallback(data, status){
 
 //Function to get user input on first page from drop down menu
 
-	function getLocationAndCallHikesAPI(userLocationChoice){
+	function getLocationAndCallHikesAPI(userLocChoice){
 
-	if(userLocationChoice == "Great Falls") { 
+		var geocoder = new google.maps.Geocoder();
+
+		var address = userLocChoice;
+
+        geocoder.geocode(
+        	{'address': address, 
+    		 'componentRestrictions': {
+            'country': 'US'
+             }
+        }, function(results, status) {
+          if (status === 'OK') {
+            console.log("geo coder found -", results[0]); //.geometry.location
+
+            if(results[0].formatted_address != "United States"){
+
+           		getHikeDataFromApi("",results[0].geometry.location.lat(), results[0].geometry.location.lng(),30, renderHikeView);
+           		console.log("got hikes");
+           		return;
+            }
+        } 
+
+                 console.log("after ok status if");
+
+
+     			 //if we fall through to here - something failed - bad input or geocode didnt work
+            
+            		alert('Geocode was not successful for the following reason: ' + status);
+
+            		if (navigator.geolocation) {
+            			console.log("geoloc");
+        				navigator.geolocation.getCurrentPosition( function(position) {
+  							console.log("geolocation fallback", position.coords.latitude, position.coords.longitude);
+
+  							userLocationChoice = "Lat: "+position.coords.latitude+" Lng: "+position.coords.longitude; 
+  							console.log	(userLocationChoice);
+
+  							 getHikeDataFromApi("",position.coords.latitude, position.coords.longitude,30, renderHikeView);
+  							 return;
+							});
+
+
+    				} else {
+        				console.log("Geolocation is not supported by this browser.");
+    					}
+
+    				console.log("end of geocoder stuff");
+    				userLocationChoice = "Charlottesville";
+    					getHikeDataFromApi("",38.0293,-78.4767,30, renderHikeView);
+          
+      });
+        
+
+
+
+	if(userLocChoice == "Great Falls") { 
 				userLat = 38.9982;
 				userLong = -77.2883;
 				getHikeDataFromApi("",38.9982,-77.2883,30, renderHikeView);
 			}
-			if(userLocationChoice === "Charlottesville") {
+			if(userLocChoice === "Charlottesville") {
 			userLat = 38.0293;
 				userLong = -78.4767; 
 			getHikeDataFromApi("",38.0293,-78.4767,30, renderHikeView);
 		}
-			if(userLocationChoice === "Harrisonburg") { 
+			if(userLocChoice === "Harrisonburg") { 
 				userLat = 38.4496;
 				userLong = -78.8689; 
 			getHikeDataFromApi("",38.4496,-78.8689,30, renderHikeView);
 		}
-			if(userLocationChoice === "Roanoke") { 
+			if(userLocChoice === "Roanoke") { 
 				userLat = 37.2710;
 				userLong = -79.9414; 
 			getHikeDataFromApi("",37.2710,-79.9414,30, renderHikeView);
 		}	
 	}
+
 let buttonClicked = false;
 	$(".js-pick-location-button").click( event => {
 			event.preventDefault();
 			console.log('clicked js-pick-location-button');
-			userLocationChoice = $("select").val(); 
+			//userLocationChoice = $("select").val(); 
+			userLocationChoice = $("#search").val(); 
+
 			console.log("location"+userLocationChoice);
 			//buttonClicked = true;
 
