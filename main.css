@@ -71,7 +71,7 @@ padding-left:   5px;
 } 
 
   .row-full-width-background {
-    background-color: #598234;
+    background-color: #476d25; /*#598234;*/
     color: white;
     max-width: none;
     width: 100%;
@@ -169,7 +169,7 @@ button {
   border-width: 1px;
   border-style: solid;
   background-color: transparent;
-  color: #7e8925;
+  color: #505160;
   padding: 0;
   margin-top: 5px;
 }
