@@ -7,15 +7,13 @@
 	<link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="grid.css">
 	<link rel="stylesheet" type="text/css" href="main.css">
-		<link rel="stylesheet" type="text/css" href="animations.css">
-
+	
 	<script>
   	FontAwesomeConfig = { searchPseudoElements: true };
 	</script>
 	<script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 </head>
 	<body>
-		<div id="map"></div>
 		<main role="main">
 			<div class="center">
 			<section class="js-location-view">
@@ -29,27 +27,15 @@
 								<form role="form">
 									<fieldset>
     									<legend class="help-text">Type in a starting location:</legend>
-    										<!--<input type="text" name="location" class="select-location" id="auto-complete-location" placeholder="Enter a location">
-    									<div class="ui-widget">
-										  <label for="city-tags">Tags: </label>
-										  <input id="city-tags">
-										</div>-->
-										<div class="align-container">
-										<div class="align-this">	
-										<input type="text" name="search" class="search" id="search" placeholder="Example: Boston" required>
-										<!--<select name="locations" class="select-location">
-										 	<option value="Great Falls">Great Falls</option>
-										 	<option value="Charlottesville">Charlottesville</option>
-										 	<option value="Harrisonburg">Harrisonburg</option>
-										 	<option value="Roanoke">Roanoke</option>
-										</select> -->
-										</div>
+    									<div class="align-container">
+												<div class="align-this">	
+												<input type="text" name="search" class="search" id="search" placeholder="Example: Boston" required>
+												</div>
 										<div class="align-this">
-										 <button type="submit" class="choose-loc-button js-pick-location-button" id="js-pick-loc-button">Go!</button></div>
+										 		<button type="submit" class="choose-loc-button js-pick-location-button" id="js-pick-loc-button">Go!</button></div>
 										</div>
 										<p class="error-messsage hide">Lost? Please enter a location like a town, city or a park to search for hikes.</p>
 									</fieldset>
-
 								</form>
 							</div>
 							</div>
@@ -84,16 +70,11 @@
 					</div>
 				</section>
 			</section>
-			<section class="js-hike-view hide" aria-live="assertive">
+			<section class="js-hike-view hide" aria-live="assertive" hidden>
 				<section>
 					<div class="row-full-width-background">
-					<div class="js-progress-section progress-row row">
-						<div class="col-4 progress-box progress-box-left"><p class="js-step1-txt">Step 1: Exploring Charlottesville Area</p>
-							<button class="progress-button">Change</button></div>
-						<div class="col-4 progress-box"><p class="js-step2-txt">Step 2: Hiking Neighbor Mountain - Jeremys Run Loop</p>
-							<button class="progress-button">Change</button></div>
-						<div class="col-4 progress-box progress-box-right"><p class="js-step3-txt">Step 3: Visiting Star Hill, Devils Backbone, Backyard Brewing Company, Star Hill, Devils Backbone, Backyard Brewing Company. Star Hill, Devils Backbone, Backyard Brewing Company</p>
-							<button class="progress-button">Generate Itinery!</button></div>
+					<div class="js-progress-section progress-row row" aria-live="polite">
+						
 					</div>
 					</div>
 					<div class="row">
@@ -117,9 +98,9 @@
 					</div>
 				</section>
 			</section>
-			<section id='js-pick-brew-section' class='js-brewery-view hide' aria-live="assertive">
+			<section id='js-pick-brew-section' class='js-brewery-view hide' aria-live="assertive" hidden>
 				<div class="row-full-width-background">
-				<div class="js-progress-section progress-row row">
+				<div class="js-progress-section progress-row row" aria-live="polite">
 					</div>
 				</div>
 					<div class="row">
@@ -132,10 +113,10 @@
 										</div>
 					
 			</section>
-		<section id="show-map" class='hide' aria-live="assertive">
+		<section id="show-map" class='hide' aria-live="assertive" hidden>
 			<section>
 				<div class="row-full-width-background">
-					<div class="js-progress-section progress-row row">						
+					<div class="js-progress-section progress-row row" aria-live="polite">						
 					</div>
 				</div>
 				<div class="row">
@@ -147,9 +128,7 @@
 						<div class="directions-button-container">
 							<button class="js-directions-button directions-button">Click for directions</button>
 						</div>
-						<div id="directions-panel">
-							
-							
+						<div id="directions-panel" aria-live="assertive">
 						</div>
 					</div>
 					<div class="col-6">
@@ -157,35 +136,25 @@
 							<ul class="map-intinerary trip-plan">
 							</ul>
 					</div>
-			
 				</div>
-
-
 			</section>
-
 		</section>
 		<section class="js-green-go-button">
-			<div class="generate-trip hide">
-				<div class="col-6m trip-summary"></div><div class="col-6m"><button class="generate-trip-button">Generate Trip Plan</button></div>
+			<div class="generate-trip hide" aria-live="polite">
+				<div class="row">
+						<div class="col-6m trip-summary"></div>
+						<div class="col-6m ">
+						<button class="generate-trip-button"><span class="fa-lg hide-on-mobile"><i class="far fa-compass fa-spin"></i></span> Map your trip!</button>
+						</div>
+				</div>
 			</div>
 		</section>
 		<section>
-			<div class = "modal hide" aria-live="assertive">
+			<div class = "modal hide" aria-live="assertive" hidden>
 				<div class = "modal-content">
-				<p class="modal-text">Loading potential hike choices...</p>
-					<div class="sk-circle">
-					  <div class="sk-circle1 sk-child"></div>
-					  <div class="sk-circle2 sk-child"></div>
-					  <div class="sk-circle3 sk-child"></div>
-					  <div class="sk-circle4 sk-child"></div>
-					  <div class="sk-circle5 sk-child"></div>
-					  <div class="sk-circle6 sk-child"></div>
-					  <div class="sk-circle7 sk-child"></div>
-					  <div class="sk-circle8 sk-child"></div>
-					  <div class="sk-circle9 sk-child"></div>
-					  <div class="sk-circle10 sk-child"></div>
-					  <div class="sk-circle11 sk-child"></div>
-					  <div class="sk-circle12 sk-child"></div>
+					<p class="modal-text">Loading potential hike choices...</p>
+					<div class="compass">
+						<span class="fa-5x"><i class="far fa-compass fa-spin"></i></span> 
 					</div>
 					<div id="modal-button-container" class="hide">
 					<button class="brew-button modal-button ">Okay</button>
@@ -196,17 +165,10 @@
 	</div>
 		</main>
 		
-
-
 	<!---Script needed to set up Google Maps/Places API-->	
 	
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQYbpeVxvc5FeK2hbOUjCOv9J8coUz180&libraries=places"></script>
-
 	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-	 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	<script src="citydatawithnames.js"></script>
-	<script src="apicalls.js"></script>
 	<script src="index.js"></script>
-
     </body>
 </html>
