@@ -476,6 +476,7 @@ input[type=checkbox]:checked ~ label{
 position: absolute;
 right: 0px;
 padding-top: 3px;
+z-index: 1;
 }
 
 .highlight

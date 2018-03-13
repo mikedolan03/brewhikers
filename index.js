@@ -144,16 +144,17 @@ if (!browserSupportsCSSProperty('animation')) {
 			//will have to clean up data here since the user has picked a hike, and possibly breweries based on that hike
 			userHikes[0] = null;
 			userBreweries = [];
+
+			//reset directions
 			directionsGenerated = false;
 			$('.directions-button-container').off('click');
+			$('#directions-panel').html("");
 			$('#directions-panel').addClass('hide');
 			$('.js-directions-button').html('Show Directions');
 			directionShowing = false;
 
-
 			//remove event handlers from brewery buttons for when we get to this page again 
 			$('#js-brewery-list').off("click");
-
 			$('#show-map').addClass('hide');
 			$('.generate-trip').addClass('hide');
 			$('.js-brewery-view').addClass('hide');
@@ -172,8 +173,10 @@ if (!browserSupportsCSSProperty('animation')) {
 
 			$('.modal-text').html(`Finding the closest breweries...`);
 			$('.modal').removeClass('hide');
+			//reset directions
 			directionsGenerated = false;
 			$('.directions-button-container').off('click');
+			$('#directions-panel').html("");
 			$('#directions-panel').addClass('hide');
 			$('.js-directions-button').html('Show Directions');
 			directionShowing = false;
@@ -638,7 +641,7 @@ function BreweryDataCallback(data, status){
 						let randomNum = Math.floor(Math.random() * Math.floor(4) + 1);
 
 						if(randomNum %2 == 0) { 
-							brewery.myImage = "http://badgerheadgames.com/wp-content/uploads/2018/02/beer-2370783_1920-e1519612752761-1.jpg"; 
+							brewery.myImage = "http://badgerheadgames.com/wp-content/uploads/2018/02/pexels-photo-597461.jpeg"; 
 						} else {
 								if(randomNum %3 == 0) { 
 									brewery.myImage = "http://badgerheadgames.com/wp-content/uploads/2018/02/pexels-photo-597461.jpeg";
@@ -953,7 +956,7 @@ function BreweryDataCallback(data, status){
             directionsDisplay.setDirections(response);
             directionsGenerated = true;
           } else {
-            window.alert('Directions request failed due to ' + status);
+            window.alert('Sorry, directions request failed due to ' + status);
           }
         });
   }
