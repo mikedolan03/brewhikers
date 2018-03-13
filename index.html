@@ -36,7 +36,7 @@
 										</div>-->
 										<div class="align-container">
 										<div class="align-this">	
-										<input type="text" name="search" class="search" id="search" placeholder="Example: Boston">
+										<input type="text" name="search" class="search" id="search" placeholder="Example: Boston" required>
 										<!--<select name="locations" class="select-location">
 										 	<option value="Great Falls">Great Falls</option>
 										 	<option value="Charlottesville">Charlottesville</option>
@@ -47,7 +47,7 @@
 										<div class="align-this">
 										 <button type="submit" class="choose-loc-button js-pick-location-button" id="js-pick-loc-button">Go!</button></div>
 										</div>
-										<p class="error-messsage">We couldn't find anything with your search term. Please enter a location like a town, city or a park to search for hikes.</p>
+										<p class="error-messsage hide">Lost? Please enter a location like a town, city or a park to search for hikes.</p>
 									</fieldset>
 
 								</form>
@@ -60,37 +60,25 @@
 					<div class="choose-hike-view">
 						<div class="row">
 							<div class="col-12">
-								<h2>Featured hikes</h2>
+								<h2>Featured Locations to Brew Hike</h2>
 							</div>
-						</div>
-						<div class="row">
-							<div class="col-3">
-								<button class="js-pick-hike">
-									<img class="img-hikes featured-hike" src="https://cdn-files.apstatic.com/hike/7041455_small_1512517042.jpg" alt="Jeremys Run Loop"> 
-									<p class="hike-name">Neighbor Mountain - Jeremys Run Loop</p>
-									<p class="hike-summary">A moderately strenuous loop above and through the canyon of Jeremys Run.</p>
-								</button>
+							<div class="col-6">
+								<ul>
+									<li><a href="#" class="feature-link">Charlottesville, VA</a></li>
+									<li><a href="#" class="feature-link">White Mountains, NH</a></li>
+									<li><a href="#" class="feature-link">Shenandoad National Park</a></li>
+									<li><a href="#" class="feature-link">Portland, OR</a></li>
+									<li><a href="#" class="feature-link">Austin, TX</a></li>
+								</ul>
 							</div>	
-							<div class="col-3">
-								<button class="js-pick-hike">
-									<img class="img-hikes featured-hike" src="https://cdn-files.apstatic.com/hike/7013554_small_1457878625.jpg" alt="Hawksbill Mountain Loop"> 
-									<p class="hike-name">Neighbor Mountain - Jeremys Run Loop</p>
-									<p class="hike-summary">A moderately strenuous loop above and through the canyon of Jeremys Run.</p>
-								</button>
-							</div>
-						<div class="col-3">
-								<button class="js-pick-hike">
-									<img class="img-hikes featured-hike" src="https://cdn-files.apstatic.com/hike/7041455_small_1512517042.jpg" alt="Jeremys Run Loop"> 
-									<p class="hike-name">Neighbor Mountain - Jeremys Run Loop</p>
-									<p class="hike-summary">A moderately strenuous loop above and through the canyon of Jeremys Run.</p>
-								</button>
-							</div>	
-							<div class="col-3">
-								<button class="js-pick-hike featured-hike">
-									<img class="img-hikes featured-hike" src="https://cdn-files.apstatic.com/hike/7013554_small_1457878625.jpg" alt="Hawksbill Mountain Loop"> 
-									<p class="hike-name">Neighbor Mountain - Jeremys Run Loop</p>
-									<p class="hike-summary">A moderately strenuous loop above and through the canyon of Jeremys Run.</p>
-								</button>
+							<div class="col-6">
+								<ul>
+									<li><a href="#" class="feature-link">Flagstaff, AZ</a></li>
+									<li><a href="#" class="feature-link">Bend, OR</a></li>
+									<li><a href="#" class="feature-link">Fort Collins, CO</a></li>
+									<li><a href="#" class="feature-link">Asheville, NC</a></li>
+									<li><a href="#" class="feature-link">Johnson City, TN</a></li>
+								</ul>
 							</div>
 						</div>
 					</div>
@@ -156,7 +144,7 @@
 						<div class="map-container">
 							<div id="final-map" ></div>
 						</div>
-						<div>
+						<div class="directions-button-container">
 							<button class="js-directions-button directions-button">Click for directions</button>
 						</div>
 						<div id="directions-panel">
@@ -182,7 +170,7 @@
 			</div>
 		</section>
 		<section>
-			<div class = "modal hide">
+			<div class = "modal hide" aria-live="assertive">
 				<div class = "modal-content">
 				<p class="modal-text">Loading potential hike choices...</p>
 					<div class="sk-circle">
@@ -199,12 +187,15 @@
 					  <div class="sk-circle11 sk-child"></div>
 					  <div class="sk-circle12 sk-child"></div>
 					</div>
+					<div id="modal-button-container" class="hide">
+					<button class="brew-button modal-button ">Okay</button>
+					</div>
 				</div>
 			</div>
 		</section>
 	</div>
 		</main>
-		<!--https://simplemaps.com/data/us-cities.-->
+		
 
 
 	<!---Script needed to set up Google Maps/Places API-->	
