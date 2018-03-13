@@ -40,11 +40,6 @@ let brewerylistContent = "";
 let currentBrewery = 0;
 
 
-//this is used to as a fall back if the CSS loading animation is not supported on an older browser
-if (!browserSupportsCSSProperty('animation')) {
-  $('.sk-circle').html('<img src="https://media0.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif">');
-  }
-
 
 //RENDERING FUNCTIONS---------------------
 
@@ -54,6 +49,7 @@ if (!browserSupportsCSSProperty('animation')) {
 		let progressContent	= "";
 		editMenuShowing = false; 
 
+//Generate progress bar for Step 1 Hikes
 		if(currentView	=== 2) {
 				progressContent +=`<div class="col-12 right-side js-open-edit"><i class="far fa-edit"></i></div>
 							<div class="col-4 progress-box progress-box-left hide-on-mobile">
@@ -63,16 +59,24 @@ if (!browserSupportsCSSProperty('animation')) {
 							<p class="js-step2-txt ellipsis">Step 2: Pick a hike...</p>
 							</div>`;
 		}
+
+//Generate progress bar for Step 2 breweries
+
 		if(currentView	=== 3) {
 			progressContent += `<div class="col-12 right-side js-open-edit"><i class="far fa-edit"></i></div>
-								<div class="col-4 progress-box progress-box-left hide-on-mobile">
+								<div class="col-3 progress-box progress-box-left hide-on-mobile">
 								<p class="js-step1-txt ellipsis">Step 1: Exploring ${userLocationChoice}</p>
 								<button class="progress-button js-go-back-to-start-button">Change Area</button></div>
-								<div class="col-4 progress-box hide-on-mobile"><p class="js-step2-txt ellipsis">Step 2: Hiking ${hikeData.trails[userHikes[0]].name}</p>
+								<div class="col-3 progress-box hide-on-mobile"><p class="js-step2-txt ellipsis">Step 2: Hiking ${hikeData.trails[userHikes[0]].name}</p>
 								<button class="progress-button js-go-back-to-hike-button">Change Hike</button></div>
-								<div class="col-4 progress-box progress-box-right"><p class="js-step3-txt ellipsis">Step 3: Choose breweries to visit...</p>
-								</div>`;
+								<div class="col-3 progress-box progress-box-right"><p class="js-step3-txt ellipsis">Step 3: Choose breweries to visit...</p>
+								</div>
+								<div class="col-3 progress-box progress-box-right hide-on-mobile"><div class="plan-button hide"><p class="js-step4-txt ellipsis">Let's make a plan.</p>
+								<button class="progress-button js-top-plan-button">Map your trip!</button></div>
+								</div>`
 						}
+
+//Generate progress bar for Map Page
 
 		if(currentView	=== 4) {
 
@@ -107,6 +111,8 @@ if (!browserSupportsCSSProperty('animation')) {
 		$('.js-progress-section').html(progressContent);
 
 
+//Set up button listeners for all parts of progress bar
+
 		$(".js-go-back-to-start-button").click( event => {
 			console.log	("user clicked to go back to start - reloading page");
 			//reloading the page should get rid of event handlers automatically and reset vars
@@ -126,7 +132,6 @@ if (!browserSupportsCSSProperty('animation')) {
 				}
 
 			
-
 		});
 
 		$(".js-close-edit").click( event => {
@@ -155,9 +160,9 @@ if (!browserSupportsCSSProperty('animation')) {
 
 			//remove event handlers from brewery buttons for when we get to this page again 
 			$('#js-brewery-list').off("click");
-			$('#show-map').addClass('hide');
+			$('#show-map').addClass('hide').prop('hidden', true);
 			$('.generate-trip').addClass('hide');
-			$('.js-brewery-view').addClass('hide');
+			$('.js-brewery-view').addClass('hide').prop('hidden', true);
 
 			getLocationAndCallHikesAPI(userLocationChoice);
 
@@ -169,10 +174,10 @@ if (!browserSupportsCSSProperty('animation')) {
 			event.preventDefault();
 			console.log('clicked');
 			
-			$('#show-map').addClass('hide');
+			$('#show-map').addClass('hide').prop('hidden', true);
 
 			$('.modal-text').html(`Finding the closest breweries...`);
-			$('.modal').removeClass('hide');
+			$('.modal').removeClass('hide').prop('hidden', false);
 			//reset directions
 			directionsGenerated = false;
 			$('.directions-button-container').off('click');
@@ -187,14 +192,6 @@ if (!browserSupportsCSSProperty('animation')) {
 		
 		});
 
-
-		
-		$(".js-go-to-map-button").click( event => {
-			event.preventDefault();
-			$('.js-brewery-view').addClass('hide');
-			$('#show-map').removeClass('hide');
-			initMap();
-		});
 
 	}
 
@@ -226,11 +223,11 @@ if (!browserSupportsCSSProperty('animation')) {
 
 		let hikeDifficulty = data.trails[i].difficulty;
 
-		if(data.trails[i].difficulty == "green" ) {hikeDifficulty = "Easy";}
-		if(data.trails[i].difficulty == "greenBlue" ) {hikeDifficulty = "Easy to Moderate";}
-		if(data.trails[i].difficulty == "blue" ) {hikeDifficulty = "Moderate";}
-		if(data.trails[i].difficulty == "blueBlack" ) {hikeDifficulty = "Moderate to Difficult";}
-		if(data.trails[i].difficulty == "black" ) {hikeDifficulty = "Difficult";}
+		if(data.trails[i].difficulty == "green" ) {hikeData.trails[i].hikeDifficulty = "Easy";}
+		if(data.trails[i].difficulty == "greenBlue" ) {hikeData.trails[i].hikeDifficulty = "Easy to Moderate";}
+		if(data.trails[i].difficulty == "blue" ) {hikeData.trails[i].hikeDifficulty = "Moderate";}
+		if(data.trails[i].difficulty == "blueBlack" ) {hikeData.trails[i].hikeDifficulty = "Moderate to Difficult";}
+		if(data.trails[i].difficulty == "black" ) {hikeData.trails[i].hikeDifficulty = "Difficult";}
 
 
 		 listContent += `<li><img class="img-hikes" src="${hikeImage}" alt="${data.trails[i].name}"> 
@@ -238,7 +235,7 @@ if (!browserSupportsCSSProperty('animation')) {
 								<p class="hike-summary">${data.trails[i].summary}</p>
 								<p class="hike-info">
 								<span class="info-bold">Distance:</span> ${data.trails[i].length}<br>
-								<span class="info-bold">Difficulty:</span> ${hikeDifficulty}
+								<span class="info-bold">Difficulty:</span> ${hikeData.trails[i].hikeDifficulty}
 								<br>
 								<span class="info-bold">Rating:</span> ${data.trails[i].stars}/5</p>
 								<button class="js-select-hike-button small-right" data="${i}">Select</button>
@@ -246,7 +243,7 @@ if (!browserSupportsCSSProperty('animation')) {
 		}
 
 		$('.js-location-view').addClass('hide');
-		$('.js-hike-view').removeClass('hide');
+		$('.js-hike-view').removeClass('hide').prop('hidden', false);
 
 		$('.js-pick-hike-directions').html(`Step 2: Pick one of these ${data.trails.length} hikes near ${userLocationChoice}`);
 
@@ -269,7 +266,7 @@ if (!browserSupportsCSSProperty('animation')) {
 			console.log (userLat, userLong); 
 
 			$('.modal-text').html(`Finding the closest breweries to ${data.trails[userHikeChoice].name}`);
-			$('.modal').removeClass('hide');
+			$('.modal').removeClass('hide').prop('hidden', false);
 
 			
 			//CALL 
@@ -286,6 +283,8 @@ if (!browserSupportsCSSProperty('animation')) {
 		//make sure to disable old event handlers since they will be regenerated
 		$('#js-brewery-list').off("click");
 		$('.js-green-go-button').off("click");
+		$('.plan-button').off('click');
+
 			if(scroll){
 					document.body.scrollTop = 0;
 			    	document.documentElement.scrollTop = 0;
@@ -302,16 +301,16 @@ if (!browserSupportsCSSProperty('animation')) {
 									<p>No breweries were found within 30 miles of this hike. </p></div>`
 
 				$('.modal-text').html(`Oh no! You must be hiking way out there. We can't seem to find any breweries near the hike you chose. Please try a new location.`);
-				 $('.modal').removeClass('hide');
-				 $('.sk-circle').addClass('hide');
+				 $('.modal').removeClass('hide').prop('hidden', false);
+				 $('.compass').addClass('hide');
 				 $('#modal-button-container').removeClass('hide');
 
 				 $('#modal-button-container').on("click", '.modal-button', function (event) {
       				event.preventDefault();
       				$('#modal-button-container').off('click');
-					$('.sk-circle').removeClass('hide');
+					$('.compass').removeClass('hide');
 				 	$('#modal-button-container').addClass('hide');
-					$('.modal').addClass('hide');
+					$('.modal').addClass('hide').prop('hidden', true);;
 					location.reload();
 
 					});
@@ -341,11 +340,9 @@ if (!browserSupportsCSSProperty('animation')) {
 
 				let imageToShow = "";
 
-				//if(breweryData[i].photos) {
-				//	imageToShow	= breweryData[i].photos[0].getUrl({'maxWidth': 500, 'maxHeight': 500});
-				//} else {
+				
 					imageToShow	= breweryData[i].myImage;
-				//}
+				
 
 				if(breweryData[i].selected) { 
 					brewerylistContent += `<div class="col-4 brew-card" id='${breweryData[i].place_id}'>
@@ -372,7 +369,6 @@ if (!browserSupportsCSSProperty('animation')) {
 											</div>`;
 					}
 
-				//console.log(detailsResult.photos[0].getUrl({'maxWidth': 500, 'maxHeight': 500}));
 				count++;
 				i++; 
 
@@ -404,17 +400,7 @@ if (!browserSupportsCSSProperty('animation')) {
 
 			}
 
-			/*brewerylistContent += `</div>
-									<div class="row" style="clear: both"><div class="col-4 hide-on-mobile">
-											<button class="previous-button"><< Previous Brewery</button></div>
-											<div class="col-4 hide-on-mobile">
-													<div class="showing-results">
-															<div class="show-results-inner">Showing results ${currentBrewery+1} to ${ii}
-															</div>
-													</div>
-											</div>
-											<div class="col-4 hide-on-mobile"><button class="next-button">Next Brewery >></button></div>`
-											*/
+			
 
 			if(showAmount < breweryData.length) {
 				brewerylistContent += `<div class="col-12 hide-on-big">
@@ -423,11 +409,10 @@ if (!browserSupportsCSSProperty('animation')) {
 								}
 
 
-		//where the else } was befor
 			
-		$('.js-hike-view').addClass('hide');
+		$('.js-hike-view').addClass('hide').prop('hidden', true);
 
-		$('.js-brewery-view').removeClass('hide');
+		$('.js-brewery-view').removeClass('hide').prop('hidden', false);
 
 		$('.js-breweries-search-results').html(`Choose from ${breweryCount} breweries listed below.`);
 
@@ -435,13 +420,14 @@ if (!browserSupportsCSSProperty('animation')) {
 
 		$('#js-brewery-list').html(brewerylistContent);	
 
-		$('.modal').addClass('hide');
+		$('.modal').addClass('hide').prop('hidden', true);;
 
 		renderProgressSection(3);
 
 		if(userBreweries.length > 0) {
 			$('.generate-trip').removeClass('hide'); 
-			$('.generate-trip-button').html(`Generate Trip`);
+			//$('.generate-trip-button').html(`Generate Trip`);
+			$('.plan-button').removeClass('hide'); 
 			$('.trip-summary').html(`1 hike and ${userBreweries.length} breweries selected`);
 		}
 
@@ -512,20 +498,27 @@ if (!browserSupportsCSSProperty('animation')) {
 
 			$('.js-step3-txt').html(step3text);
 
-			$('#js-breweries-selected-go-button').removeClass("greyed");
-
 			$(event.currentTarget).removeClass('js-add-brewery-button').addClass('js-remove-brewery-button').html('Remove'); 
 
 			$('.generate-trip').removeClass('hide'); 
-			$('.generate-trip-button').html(`Generate Trip`);
+			$('.plan-button').removeClass('hide'); 
+			//$('.generate-trip-button').html(`Generate Trip`);
 			$('.trip-summary').html(`1 hike and ${userBreweries.length} breweries selected`);
 			
 		});
 
 		$('.js-green-go-button').on('click', '.generate-trip', function (event) {
 			event.preventDefault();
-				$('.js-brewery-view').addClass('hide');
-				$('#show-map').removeClass('hide');
+				$('.js-brewery-view').addClass('hide').prop('hidden', true);
+				$('#show-map').removeClass('hide').prop('hidden', false);
+				currentBrewery = 0;
+				initMap();
+		}); 
+
+		$('.plan-button').on('click', '.js-top-plan-button', function (event) {
+			event.preventDefault();
+				$('.js-brewery-view').addClass('hide').prop('hidden', true);
+				$('#show-map').removeClass('hide').prop('hidden', false);
 				currentBrewery = 0;
 				initMap();
 		}); 
@@ -559,29 +552,21 @@ if (!browserSupportsCSSProperty('animation')) {
 			}	else {
 					step3text = "Step 3: Choose breweries to visit...";
 					$('.generate-trip').addClass('hide');
+					$('.plan-button').addClass('hide'); 
 				}
 			
 		
 			$('.js-step3-txt').html(step3text);
 
-			$('#js-breweries-selected-go-button').removeClass("greyed");
-
+			
 			$(event.currentTarget).removeClass('js-remove-brewery-button').addClass('js-add-brewery-button').html('Add to list'); 
 
 
 
 		});
 
-		$("#js-breweries-selected-go-button").click( event => {
-			event.preventDefault();
-			console.log('clicked');
-			$('.js-brewery-view').addClass('hide');
-			$('#show-map').removeClass('hide');
-			initMap();
-
-		});
-
-	} //else }
+		
+	} //else 
 
 
 
@@ -591,6 +576,7 @@ if (!browserSupportsCSSProperty('animation')) {
 function BreweryDataCallback(data, status){
 		console.log("api call status: ", status);
 		
+		//this checks if we have only a few results then expand the search so we get a few more
 		if(data.length < 7) {
 
 			radiusAmount += 8000;
@@ -616,6 +602,7 @@ function BreweryDataCallback(data, status){
 
 		breweryData = data;
 
+		//filter out non-brewery results- try to prevent Google trying to serve something unrelated when there just arent breweries near
 		breweryData = breweryData.filter(b => {
 			if( b.name.indexOf('Brewery') >= 0 || b.name.indexOf('Beer')  >= 0 || b.name.indexOf('Brewing')  >= 0 || b.name.indexOf('Beerworks')  >= 0) { 
 				return true; 
@@ -659,15 +646,12 @@ function BreweryDataCallback(data, status){
 
 			});
 
-		//breweryData[i].distanceMi = findDistance(userLat, userLong, breweryData[i].geometry.location.lat(), breweryData[i].geometry.location.lng() ).distanceMi; 
-
 
 		//sort the data based on distance 
 
 		breweryData.sort((a, b) => a.distanceMi - b.distanceMi);
 
-		//console.log("getting data: ", data);
-				console.log("sorted data: ", breweryData);
+		console.log("sorted data: ", breweryData);
 
 
 		let brewerylistContent = '';
@@ -676,7 +660,6 @@ function BreweryDataCallback(data, status){
 
 		renderBreweryView();
 
-		//if(breweryCount > 6) breweryCount = 6; 
 	}
 
 
@@ -867,7 +850,7 @@ function BreweryDataCallback(data, status){
 								<p class="hike-name"><span class="info-bold">${hikeData.trails[userHikes[0]].name}</span></p>
 								<p class="hike-summary">${hikeData.trails[userHikes[0]].summary}</p>
 								<p class="hike-info"><span class="info-bold">Distance:</span> ${hikeData.trails[userHikes[0]].length}<br>
-								<span class="info-bold">Difficulty:</span> ${hikeData.trails[userHikes[0]].difficulty}<br>
+								<span class="info-bold">Difficulty:</span> ${hikeData.trails[userHikes[0]].hikeDifficulty}<br>
 								<span class="info-bold">Rating:</span> ${hikeData.trails[userHikes[0]].stars}/5</p>
 								</li>`;
 
@@ -1000,16 +983,18 @@ function BreweryDataCallback(data, status){
 
 	}
 
-//Function that can call the Place Detail part of Google Maps. Get more info like user reviews. Future feature
+//Function that can call the Place Detail part of Google Maps. Get more info like user reviews. ***Future feature***
+//This feature was in initial concept but resulted in too many API calls
+//could be a good 'on demand' feature
 	function getBreweryDetailDataFromGoogleApi(placeID, callback) {
 
-		console.log(placeID);
+	console.log(placeID);
 
 	 let request = {
 	  	placeId: `${placeID}`
 		};
 
-		console.log(request);
+	console.log(request);
 
 	service = new google.maps.places.PlacesService(map);
 	service.getDetails(request, callback);
@@ -1046,15 +1031,15 @@ function BreweryDataCallback(data, status){
                 console.log("after ok status if");
 
                 $('.modal-text').html(`Oops, can't seem to find hikes near the location you entered. Please type a new location - like a city or park.`);
-				$('.modal').removeClass('hide');
-				$('.sk-circle').addClass('hide');
+				$('.modal').removeClass('hide').prop('hidden', false);
+				$('.compass').addClass('hide');
 				$('#modal-button-container').removeClass('hide');
 
 				$('#modal-button-container').on("click", '.modal-button', function (event) {
       				event.preventDefault();
-					$('.sk-circle').removeClass('hide');
+					$('.compass').removeClass('hide');
 				 	$('#modal-button-container').addClass('hide');
-					$('.modal').addClass('hide');
+					$('.modal').addClass('hide').prop('hidden', true);
 
 				});
           
@@ -1081,25 +1066,6 @@ function BreweryDataCallback(data, status){
 			getLocationAndCallHikesAPI( userLocationChoice);
 		});
 
-}
-
-//Check for animation browser compatibility for IE0 and replace the css3 animation with a gif in the loading modal
-function browserSupportsCSSProperty(propertyName) {
-  var elm = document.createElement('div');
-  propertyName = propertyName.toLowerCase();
-
-  if (elm.style[propertyName] != undefined)
-    return true;
-
-  var propertyNameCapital = propertyName.charAt(0).toUpperCase() + propertyName.substr(1),
-    domPrefixes = 'Webkit Moz ms O'.split(' ');
-
-  for (var i = 0; i < domPrefixes.length; i++) {
-    if (elm.style[domPrefixes[i] + propertyNameCapital] != undefined)
-      return true;
-  }
-
-  return false;
 }
 
 

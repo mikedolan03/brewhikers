@@ -32,6 +32,9 @@ html, body {
 .color-darkblue {
   background-color: #505160;
 }
+.color-white {
+  color:  white;
+}
 header {
   width: 100%;
   background-color:#626e61;  /* #2EA800;/* #7e8925; */
@@ -204,6 +207,10 @@ button {
   white-space: nowrap;
   overflow: hidden;
 }
+
+.compass {
+  margin: 60px auto;
+ }
 
 /* IE 6 */
 * html .generate-trip {
@@ -558,7 +565,7 @@ border-radius: 10px;
 background-color: white;
 margin-top: 5px;*/
     color: #505160;
-    font-size: 18px;
+    font-size: 14px;
     border-style: solid;
     margin-top: 8px;
     margin-right:   5px;
@@ -690,6 +697,11 @@ margin-top: 5px;*/
   display: block;
 }
 
+span.hide-on-mobile 
+{
+  display: inline;
+}
+
 .hide-on-big
 {
   display: none;
@@ -702,6 +714,11 @@ margin-top: 5px;*/
     height:750px;
 
   }
+
+.generate-trip {
+    height:55px;
+   
+}
 
 .modal-content {
   text-align: center;
@@ -840,11 +857,10 @@ padding: 20px;
 
 
 .generate-trip-button {
-
 font-size: 18px;
 width: 50%;
-
-
+height:   45px;
+margin-top:5px;
 }
 
 
