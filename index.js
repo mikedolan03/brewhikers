@@ -1,20 +1,33 @@
 function main(){
 
+//---Variables 
 
-
+//place to search for hikes
 let userLocationChoice = "Charlottesville";
+
+//Lat/Lng initially set to search location and then to hike location
 let userLat = 0;
 let userLong =0;
+
+//Starting radius to search from
 let radiusAmount = 16000;
-let hikeData = {};
-let breweryData = {};
+
+//arrays to store Hike / Brewery data pulled from APIs
+let hikeData = [];
+let breweryData = [];
+
+//state of mobile menu
 let editMenuShowing = false;
+
 let userLoc;
 const breweryDetails = [];
 let showAmount = 6;
 let autocomplete;
 let directionShowing = false;
+
+//state of directions so that we dont keep calling the direction api if we are just hiding / showing
 let directionsGenerated = false;
+
 //hikes the user has selected - currently just one is allowed but could branch to more hikes as a feature
 const userHikes = []; 
 
@@ -32,11 +45,6 @@ if (!browserSupportsCSSProperty('animation')) {
   $('.sk-circle').html('<img src="https://media0.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif">');
   }
 
-//$( "#city-tags" ).autocomplete({
-   //   source: cityLookUp
-    //});
-
-//getLocationFromGooglePlacesApi();
 
 //RENDERING FUNCTIONS---------------------
 
@@ -49,20 +57,20 @@ if (!browserSupportsCSSProperty('animation')) {
 		if(currentView	=== 2) {
 				progressContent +=`<div class="col-12 right-side js-open-edit"><i class="far fa-edit"></i></div>
 							<div class="col-4 progress-box progress-box-left hide-on-mobile">
-							<p class="js-step1-txt">Step 1: Exploring ${userLocationChoice}</p>
+							<p class="js-step1-txt ellipsis">Step 1: Exploring ${userLocationChoice}</p>
 							<button class="progress-button js-go-back-to-start-button">Change Area</button></div>
 							<div class="col-4 progress-box">
-							<p class="js-step2-txt">Step 2: Pick a hike...</p>
+							<p class="js-step2-txt ellipsis">Step 2: Pick a hike...</p>
 							</div>`;
 		}
 		if(currentView	=== 3) {
 			progressContent += `<div class="col-12 right-side js-open-edit"><i class="far fa-edit"></i></div>
 								<div class="col-4 progress-box progress-box-left hide-on-mobile">
-								<p class="js-step1-txt">Step 1: Exploring ${userLocationChoice}</p>
+								<p class="js-step1-txt ellipsis">Step 1: Exploring ${userLocationChoice}</p>
 								<button class="progress-button js-go-back-to-start-button">Change Area</button></div>
-								<div class="col-4 progress-box hide-on-mobile"><p class="js-step2-txt">Step 2: Hiking ${hikeData.trails[userHikes[0]].name}</p>
+								<div class="col-4 progress-box hide-on-mobile"><p class="js-step2-txt ellipsis">Step 2: Hiking ${hikeData.trails[userHikes[0]].name}</p>
 								<button class="progress-button js-go-back-to-hike-button">Change Hike</button></div>
-								<div class="col-4 progress-box progress-box-right"><p class="js-step3-txt">Step 3: Choose breweries to visit...</p>
+								<div class="col-4 progress-box progress-box-right"><p class="js-step3-txt ellipsis">Step 3: Choose breweries to visit...</p>
 								</div>`;
 						}
 
@@ -85,13 +93,13 @@ if (!browserSupportsCSSProperty('animation')) {
 
 
 			progressContent += `<div class="col-12 right-side js-open-edit"><i class="far fa-edit"></i></div>
-							<div class="col-3 progress-box progress-box-left hide-on-mobile"><p class="js-step1-txt">Step 1: Exploring ${userLocationChoice}</p>
+							<div class="col-3 progress-box progress-box-left hide-on-mobile"><p class="js-step1-txt ellipsis">Step 1: Exploring ${userLocationChoice}</p>
 							<button class="progress-button js-go-back-to-start-button">Change Area</button></div>
-							<div class="col-3 progress-box hide-on-mobile"><p class="js-step2-txt">Step 2: Hiking ${hikeData.trails[userHikes[0]].name}</p>
+							<div class="col-3 progress-box hide-on-mobile"><p class="js-step2-txt ellipsis">Step 2: Hiking ${hikeData.trails[userHikes[0]].name}</p>
 							<button class="progress-button js-go-back-to-hike-button">Change Hike</button></div>
-							<div class="col-3 progress-box hide-on-mobile progress-box-right"><p class="js-step3-txt">${step3text}</p>
+							<div class="col-3 progress-box hide-on-mobile progress-box-right"><p class="js-step3-txt ellipsis">${step3text}</p>
 							<button class="progress-button js-go-to-breweries-button">Change Breweries</button></div>
-							<div class="col-3 progress-box progress-box-right"><p class="js-step3-txt">Results: Plan Details</p>
+							<div class="col-3 progress-box progress-box-right"><p class="js-step3-txt ellipsis">Results: Plan Details</p>
 							<button class="progress-button js-go-back-to-start-button">Start Over</button>
 							</div>`;
 						}
@@ -136,6 +144,7 @@ if (!browserSupportsCSSProperty('animation')) {
 			//will have to clean up data here since the user has picked a hike, and possibly breweries based on that hike
 			userHikes[0] = null;
 			userBreweries = [];
+			directionsGenerated = false;
 
 
 			//remove event handlers from brewery buttons for when we get to this page again 
@@ -159,6 +168,7 @@ if (!browserSupportsCSSProperty('animation')) {
 
 			$('.modal-text').html(`Finding the closest breweries...`);
 			$('.modal').removeClass('hide');
+			directionsGenerated = false;
 
 			//no need to re-run API since we already have the data stored and sorted 
 			renderBreweryView();
@@ -212,11 +222,6 @@ if (!browserSupportsCSSProperty('animation')) {
 		if(data.trails[i].difficulty == "black" ) {hikeDifficulty = "Difficult";}
 
 
-
-
-
-
-
 		 listContent += `<li><img class="img-hikes" src="${hikeImage}" alt="${data.trails[i].name}"> 
 								<p class="hike-name">${data.trails[i].name}</p>
 								<p class="hike-summary">${data.trails[i].summary}</p>
@@ -231,8 +236,6 @@ if (!browserSupportsCSSProperty('animation')) {
 
 		$('.js-location-view').addClass('hide');
 		$('.js-hike-view').removeClass('hide');
-
-		//$('.js-hike-search-results').html(`Choose from ${data.trails.length} hikes listed below.`);
 
 		$('.js-pick-hike-directions').html(`Step 2: Pick one of these ${data.trails.length} hikes near ${userLocationChoice}`);
 
@@ -282,8 +285,25 @@ if (!browserSupportsCSSProperty('animation')) {
 
 		if(breweryCount <= 0) {
 
+			//The hike/location is too remote that no breweries can be found. So render a modal popup and then send user back to search another location
+
 			brewerylistContent =`<div class="col-4">
-									<p>No breweries were found within 50km of this hike. </p></div>`
+									<p>No breweries were found within 30 miles of this hike. </p></div>`
+
+				$('.modal-text').html(`Oh no! You must be hiking way out there. We can't seem to find any breweries near the hike you chose. Please try a new location.`);
+				 $('.modal').removeClass('hide');
+				 $('.sk-circle').addClass('hide');
+				 $('#modal-button-container').removeClass('hide');
+
+				 $('#modal-button-container').on("click", '.modal-button', function (event) {
+      				event.preventDefault();
+      				$("#modal-button-container").off("click");
+					$('.sk-circle').removeClass('hide');
+				 	$('#modal-button-container').addClass('hide');
+					$('.modal').addClass('hide');
+					location.reload();
+
+					});
 
 		} else {
 			
@@ -349,7 +369,31 @@ if (!browserSupportsCSSProperty('animation')) {
 
 			}
 
-			brewerylistContent += `</div>
+			brewerylistContent += `</div>`;
+
+			console.log("generating next buttons",currentBrewery, breweryData.length);
+
+			if(currentBrewery != 0) {
+				brewerylistContent += `<div class="row" style="clear: both"><div class="col-4 hide-on-mobile">
+											<button class="previous-button"><< Previous Breweries</button></div>`
+			} else {
+				brewerylistContent +=`<div class="row" style="clear: both"><div class="col-4 hide-on-mobile">
+											&nbsp; </div>`
+			}
+
+			brewerylistContent += `<div class="col-4 hide-on-mobile">
+													<div class="showing-results">
+															<div class="show-results-inner">Showing results ${currentBrewery+1} to ${ii}
+															</div>
+													</div>
+									</div>`
+
+			if( breweryData.length > currentBrewery+6) {
+				brewerylistContent += `<div class="col-4 hide-on-mobile"><button class="next-button">Next Breweries >></button></div>`
+
+			}
+
+			/*brewerylistContent += `</div>
 									<div class="row" style="clear: both"><div class="col-4 hide-on-mobile">
 											<button class="previous-button"><< Previous Brewery</button></div>
 											<div class="col-4 hide-on-mobile">
@@ -359,6 +403,7 @@ if (!browserSupportsCSSProperty('animation')) {
 													</div>
 											</div>
 											<div class="col-4 hide-on-mobile"><button class="next-button">Next Brewery >></button></div>`
+											*/
 
 			if(showAmount < breweryData.length) {
 				brewerylistContent += `<div class="col-12 hide-on-big">
@@ -367,7 +412,7 @@ if (!browserSupportsCSSProperty('animation')) {
 								}
 
 
-		}
+		//where the else } was befor
 			
 		$('.js-hike-view').addClass('hide');
 
@@ -470,6 +515,7 @@ if (!browserSupportsCSSProperty('animation')) {
 			event.preventDefault();
 				$('.js-brewery-view').addClass('hide');
 				$('#show-map').removeClass('hide');
+				currentBrewery = 0;
 				initMap();
 		}); 
 
@@ -523,6 +569,8 @@ if (!browserSupportsCSSProperty('animation')) {
 			initMap();
 
 		});
+
+	} //else }
 
 
 
@@ -1136,31 +1184,24 @@ function BreweryDataCallback(data, status){
 
                  console.log("after ok status if");
 
+                 $('.modal-text').html(`Oops, can't seem to find hikes near the location you entered. Please type a new location - like a city or park.`);
+				 $('.modal').removeClass('hide');
+				 $('.sk-circle').addClass('hide');
+				 $('#modal-button-container').removeClass('hide');
 
-     			 //if we fall through to here - something failed - bad input or geocode didnt work
-            
-            		alert('Geocode was not successful for the following reason: ' + status);
+				$('#modal-button-container').on("click", '.modal-button', function (event) {
+      				event.preventDefault();
+					$('.sk-circle').removeClass('hide');
+				 	$('#modal-button-container').addClass('hide');
+					$('.modal').addClass('hide');
 
-            		if (navigator.geolocation) {
-            			console.log("geoloc");
-        				navigator.geolocation.getCurrentPosition( function(position) {
-  							console.log("geolocation fallback", position.coords.latitude, position.coords.longitude);
-
-  							userLocationChoice = "Lat: "+position.coords.latitude+" Lng: "+position.coords.longitude; 
-  							console.log	(userLocationChoice);
-
-  							 getHikeDataFromApi("",position.coords.latitude, position.coords.longitude,30, renderHikeView);
-  							 return;
-							});
+					});
 
 
-    				} else {
-        				console.log("Geolocation is not supported by this browser.");
-    					}
 
-    				console.log("end of geocoder stuff");
-    				userLocationChoice = "Charlottesville";
-    					getHikeDataFromApi("",38.0293,-78.4767,30, renderHikeView);
+     			 
+    				//userLocationChoice = "Charlottesville";
+    				//getHikeDataFromApi("",38.0293,-78.4767,30, renderHikeView);
           
       });
         
@@ -1190,6 +1231,7 @@ function BreweryDataCallback(data, status){
 	}
 
 let buttonClicked = false;
+
 	$(".js-pick-location-button").click( event => {
 			event.preventDefault();
 			console.log('clicked js-pick-location-button');
@@ -1204,6 +1246,14 @@ let buttonClicked = false;
 			getLocationAndCallHikesAPI(userLocationChoice);
 			 
 		} );
+
+$(".feature-link").click( event => {
+			event.preventDefault();
+			userLocationChoice =$(event.currentTarget).text();
+
+			getLocationAndCallHikesAPI( userLocationChoice);
+		});
+
 
 }
 
