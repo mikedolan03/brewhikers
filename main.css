@@ -99,10 +99,6 @@ padding-left:   5px;
   height: 200px;
   margin-top: 5px;
 
-  /*in-height: 186px; 
-  margin-right: 10px; */
-  /*width: 100px;
-  height: 100px; */
 }
 
 
@@ -494,12 +490,6 @@ z-index: 1;
 .progress-box {
   position:   relative; 
   font-size:  .8em;
- /* border-style: solid;
-  border-top-width: 1px;
-  border-bottom-width: 1px;
-  border-left-width: 0px;
-  border-right-width: 0px;  
-  min-height: 70px;*/
   padding: 5px;
 }
 
@@ -509,19 +499,7 @@ z-index: 1;
 
 }
 .progress-box-left { }
- /* border-left-width: 1px;
-  border-right-width:   0px; 
-  border-bottom-left-radius: 10px;
-  border-top-left-radius: 10px;
-}
 
-.progress-box-right {
-  border-right-width: 1px;
-  border-left-width:  0px;
-  border-bottom-right-radius: 10px;
-  border-top-right-radius: 10px;
-}
-*/
 .align-container {
   display: table;
   width: 100%;
@@ -530,7 +508,6 @@ z-index: 1;
 .align-this {
   display:table-cell;
   vertical-align: middle;
-  
 }
 
 .progress-button {
@@ -558,12 +535,6 @@ box-shadow: 2px 2px #045f04;
 }
 
 .generate-trip-button {
-/*color: green;
-font-size: 1em;
-border-style: solid;
-border-radius: 10px;
-background-color: white;
-margin-top: 5px;*/
     color: #505160;
     font-size: 14px;
     border-style: solid;
@@ -587,62 +558,6 @@ margin-top: 5px;*/
     text-align: center;
 }
 
-/* Custom dropdown */
-.custom-dropdown {
-  width: 80%; 
-  position: relative;
-  display: inline-block;
-  vertical-align: middle;
-  margin: 10px; /* demo only */
-}
-
-.custom-dropdown select {
-  font-size: inherit;
-  padding: .5em;
-  padding-right: 2.5em; 
-  border: 0;
-  margin: 0;
-  border-radius: 3px;
-  text-indent: 0.01px;
-  text-overflow: '';
-  /*Hiding the select arrow for firefox*/
-  -moz-appearance: none;
-  /*Hiding the select arrow for chrome*/
-  -webkit-appearance:none;
-  /*Hiding the select arrow default implementation*/
-  appearance: none;
-}
-/*Hiding the select arrow for IE10*/
-.custom-dropdown select::-ms-expand {
-    display: none;
-}
-
-.custom-dropdown::before,
-.custom-dropdown::after {
- /*
-  content: "";
-  position: absolute;
-  pointer-events: none;
-  */
-}
-
-.custom-dropdown::after { /*  Custom dropdown arrow */
-  position: absolute;
-  display: none;
-  /*content: "\25BC";*/
-  font-family: "Font Awesome 5 Solid"; 
-  content: "\f078";
-  height: 1em;
-  color: black;
-  left: 65%;
-  top: 40%;
-  height: 80px;
-    right: 11px;
-    top: 6px;
-    height: 34px;
-    padding: 15px 0px 0px 8px;
-    border-left: 1px solid #0ebeff;
-}
 
 /* The Modal (background) */
 .modal {
@@ -668,28 +583,7 @@ margin-top: 5px;*/
     width: 200px;
     height: 300px;
  }
- /* 
-.custom-dropdown::after { Custom dropdown arrow 
-  content: "\25BC";
-  height: 1em;
-  font-size: .625em;
-  line-height: 1;
-  right: -10em;
-  top: 50%;
-  margin-top: -.5em;
-  height: 80px;
-}
-*/
-/*.custom-dropdown::before { 
-  width: 2em;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  border-radius: 0 3px 3px 0;
-  background-color: rgba(0,0,0,.2);
-}
-*/
-
+ 
 /* */
 @media only screen and (min-width: 640px) {
   .hide-on-mobile
