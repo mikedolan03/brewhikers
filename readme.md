@@ -3,7 +3,9 @@
 ## Summary ##
 Brew Hikers is a beer enthusiast's hiking trip planner. Users can enter a place they'd like to explore, find a hike nearby and then choose from an assortment of breweries in the surrounding area. Brew Hikers choose one hike and multiple breweries to complete their trip. All of these locations are then provided neatly all in one place on the trip plan page, complete with a list of locations, a marked Google Map, and driving directions to make the road trip easier.
 
-### This is an H3 ######
+### Screen Shots ######
+![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+
 
 ## Technologies Used ##
 - HTML5
