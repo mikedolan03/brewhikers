@@ -771,11 +771,15 @@ function BreweryDataCallback(data, status){
 	function organizeSelectedBreweries()
 	{
 
+		console.log("userBreweries",userBreweries);
+		console.log(breweryData[userBreweries[0]]);
+
+
 		let userSelectedBreweryData = [];
 
 		for(let i = 0; i < userBreweries.length; i++)
 		{
-			userSelectedBreweryData.push( breweryData[i] );
+			userSelectedBreweryData.push( breweryData[userBreweries[i]] );
 		} 
 
 		userSelectedBreweryData.sort((a, b) => a.distanceMi - b.distanceMi);
